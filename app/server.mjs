@@ -17,15 +17,14 @@ const FONTS = path.join(REPO, "node_modules", "@fontsource");
 // Product names/photos: $PRODUCT_INFO_DIR, else "product-info/" inside this project (from the data bundle,
 // see scripts/make-bundle.mjs), else the jlc-product-info project next to this one.
 const BUNDLED_INFO = path.join(REPO, "product-info");
-const PRODUCT_INFO = path.resolve(
-  process.env.PRODUCT_INFO_DIR || (fs.existsSync(BUNDLED_INFO) ? BUNDLED_INFO : path.join(REPO, "..", "jlc-product-info")),
-);
-const CATALOG = path.join(PRODUCT_INFO, "data", "build", "catalog.internal.json");
-const MEDIA = path.join(PRODUCT_INFO, "web", "public", "media");
+// Checked on every request (not once at startup), so unzipping the data while the app is already open still works.
+const productInfo = () =>
+  path.resolve(process.env.PRODUCT_INFO_DIR || (fs.existsSync(BUNDLED_INFO) ? BUNDLED_INFO : path.join(REPO, "..", "jlc-product-info")));
+const catalogFile = () => path.join(productInfo(), "data", "build", "catalog.internal.json");
+const mediaDir = () => path.join(productInfo(), "web", "public", "media");
 const SKU_MAP = path.join(REPO, "data", "sku-map.json");
 const EXTRACTS = path.join(REPO, "data", "extracts.json");
-// Extra product photos dropped in the product-info folder, named with the code in brackets: "เซรั่มขิงดำ - หลอด (JH707-40g).jpg"
-const EXTRA_IMAGES = PRODUCT_INFO;
+// Extra product photos sit directly in the product-info folder, named with the code in brackets: "เซรั่มขิงดำ - หลอด (JH707-40g).jpg"
 const APP_ID = "jlc-cn-stock";
 
 const FIRST_PORT = Number(process.env.PORT) || 5230;
@@ -58,9 +57,11 @@ const mtime = (p) => {
 let cache = { stamp: "", data: null };
 function getData() {
   const xlsx = cnFile();
-  const stamp = [xlsx, mtime(xlsx), mtime(CATALOG), mtime(SKU_MAP), mtime(EXTRACTS), mtime(EXTRA_IMAGES)].join("|");
+  const info = productInfo();
+  const catalog = catalogFile();
+  const stamp = [xlsx, mtime(xlsx), info, mtime(catalog), mtime(SKU_MAP), mtime(EXTRACTS), mtime(info)].join("|");
   if (cache.stamp !== stamp) {
-    cache = { stamp, data: buildData({ xlsx, catalogFile: CATALOG, skuMapFile: SKU_MAP, extraImageDir: EXTRA_IMAGES, extractsFile: EXTRACTS }) };
+    cache = { stamp, data: buildData({ xlsx, catalogFile: catalog, skuMapFile: SKU_MAP, extraImageDir: info, extractsFile: EXTRACTS }) };
   }
   return cache.data;
 }
@@ -117,12 +118,12 @@ const server = http.createServer((req, res) => {
       return json(res, 500, { error: msg });
     }
   }
-  if (pathname.startsWith("/media/")) return sendFile(res, MEDIA, pathname.slice("/media/".length), 86400);
+  if (pathname.startsWith("/media/")) return sendFile(res, mediaDir(), pathname.slice("/media/".length), 86400);
   if (pathname.startsWith("/extra/")) {
     // only image files directly in the product-info folder, nothing else from it
     const name = pathname.slice("/extra/".length);
     if (name.includes("/") || name.includes("\\") || !/\.(jpe?g|png|webp)$/i.test(name)) return send(res, 404, "not found");
-    return sendFile(res, EXTRA_IMAGES, name, 3600);
+    return sendFile(res, productInfo(), name, 3600);
   }
   if (pathname.startsWith("/fonts/")) return sendFile(res, FONTS, pathname.slice("/fonts/".length), 86400);
   return sendFile(res, PUBLIC, pathname === "/" ? "index.html" : pathname.slice(1));
@@ -171,7 +172,7 @@ async function start(port) {
     const url = `http://localhost:${port}/`;
     console.log(`CN Dashboard: ${url}`);
     console.log(`ไฟล์ CN: ${cnFile()}`);
-    console.log(fs.existsSync(CATALOG) ? `แคตาล็อก: ${CATALOG}` : `ไม่พบแคตาล็อก (${CATALOG}) จะใช้ชื่อจาก Excel และไม่มีรูป`);
+    console.log(fs.existsSync(catalogFile()) ? `แคตาล็อก: ${catalogFile()}` : `ไม่พบแคตาล็อก (${catalogFile()}) จะใช้ชื่อจาก Excel และไม่มีรูป`);
     console.log("กด Ctrl+C เพื่อปิด");
     if (OPEN) openBrowser(url);
   });
