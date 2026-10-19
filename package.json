@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node app/server.mjs",
     "open": "node app/server.mjs --open",
-    "test": "node --test \"app/lib/*.test.mjs\""
+    "test": "node --test \"app/lib/*.test.mjs\"",
+    "bundle": "node scripts/make-bundle.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",

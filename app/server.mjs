@@ -14,7 +14,12 @@ const DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(DIR, "..");
 const PUBLIC = path.join(DIR, "public");
 const FONTS = path.join(REPO, "node_modules", "@fontsource");
-const PRODUCT_INFO = path.resolve(process.env.PRODUCT_INFO_DIR || path.join(REPO, "..", "jlc-product-info"));
+// Product names/photos: $PRODUCT_INFO_DIR, else "product-info/" inside this project (from the data bundle,
+// see scripts/make-bundle.mjs), else the jlc-product-info project next to this one.
+const BUNDLED_INFO = path.join(REPO, "product-info");
+const PRODUCT_INFO = path.resolve(
+  process.env.PRODUCT_INFO_DIR || (fs.existsSync(BUNDLED_INFO) ? BUNDLED_INFO : path.join(REPO, "..", "jlc-product-info")),
+);
 const CATALOG = path.join(PRODUCT_INFO, "data", "build", "catalog.internal.json");
 const MEDIA = path.join(PRODUCT_INFO, "web", "public", "media");
 const SKU_MAP = path.join(REPO, "data", "sku-map.json");

@@ -5,6 +5,9 @@ node_modules/
 *.xlsx
 ~$*.xlsx
 CN-Dashboard-*.html
+# data bundle (npm run bundle) and its unpacked product data
+bundle/
+product-info/
 
 # local Claude settings
 .claude/settings.local.json
