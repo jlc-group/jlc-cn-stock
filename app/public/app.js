@@ -1,0 +1,482 @@
+// CN Dashboard — หน้าเว็บ (JS ล้วน ไม่ต้อง build) ข้อมูลมาจาก GET /api/data
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const fmt = (n) => Number(n || 0).toLocaleString("th-TH");
+const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
+const thDate = (iso) => (iso ? new Date(iso + "T00:00:00").toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "2-digit" }) : "");
+const thDateTime = (iso) => new Date(iso).toLocaleString("th-TH", { day: "numeric", month: "short", year: "2-digit", hour: "2-digit", minute: "2-digit" });
+
+const GROUPS = {
+  sell: { label: "ขายต่อได้", desc: "เกรด A+ / A / B", color: "var(--sell)" },
+  rush: { label: "รีบระบาย", desc: "เกรด C / D ใกล้หมดอายุ", color: "var(--rush)" },
+  expired: { label: "หมดอายุ", desc: "เกรด X ต้องทำลาย", color: "var(--expired)" },
+};
+const ISSUE_TYPES = {
+  unmatched: "SKU ไม่มีในแคตาล็อก",
+  "name-mismatch": "SKU กับชื่อสินค้าไม่ตรงกัน",
+  size: "ขนาดนี้ไม่มีในแคตาล็อก",
+  date: "วันที่อ่านไม่ได้",
+  "date-text": "วันที่เป็นข้อความ",
+  "no-qty": "มี SKU แต่ไม่มีจำนวน",
+  "no-sku": "มีจำนวนแต่ไม่มี SKU",
+  sheet: "แท็บที่อ่านไม่ได้",
+};
+
+let DATA = null;
+// An exported file carries its data inline (see export.js); the live app fetches it from the server.
+const SNAPSHOT = window.__CN_DATA__ ?? null;
+/** Image paths from the server are relative to it; exported files hold data: URLs. */
+const imgSrc = (src) => (String(src).startsWith("data:") ? src : "/" + src);
+const state = { month: null, group: "all", grade: "all", family: "all", brand: "all", location: "all", q: "", sort: "sell", view: "cards" };
+
+// remember view choices per viewer (convenience only)
+try {
+  Object.assign(state, JSON.parse(localStorage.getItem("cn-dash") || "{}"), { group: "all", q: "" });
+} catch {}
+const save = () => {
+  try {
+    localStorage.setItem("cn-dash", JSON.stringify({ month: state.month, sort: state.sort, view: state.view }));
+  } catch {}
+};
+
+const gradeColor = (k) => `var(--g-${k})`;
+const familyLabel = (id) => DATA.families?.find((f) => f.id === id)?.label ?? "";
+const groupOf = (k) => DATA.grades.find((g) => g.key === k)?.group;
+
+function sumGroups(qty) {
+  const s = { sell: 0, rush: 0, expired: 0, total: 0 };
+  for (const g of DATA.grades) {
+    const n = qty[g.key] || 0;
+    s[g.group] += n;
+    s[g.key] = n;
+    s.total += n;
+  }
+  return s;
+}
+
+/** Rows in the selected month / location. */
+function scopedRows() {
+  return DATA.rows.filter((r) => (state.month === "all" || r.month === state.month) && (state.location === "all" || r.location === state.location));
+}
+
+function matchesText(it) {
+  if (!state.q) return true;
+  const q = state.q.toLowerCase().replace(/\s+/g, "");
+  const hay = [it.name, familyLabel(it.familyId), it.productName, it.nameEn, it.nickname, it.sku, ...it.rawSkus, ...it.rawNames].join("|").toLowerCase().replace(/\s+/g, "");
+  return hay.includes(q);
+}
+
+/** Aggregate rows per item, then apply brand / search filters. Group filter is applied by the caller. */
+function aggregate(rows) {
+  const by = new Map();
+  for (const r of rows) {
+    const it = DATA.items[r.itemKey];
+    if (!it) continue;
+    if (state.brand !== "all" && (it.brandId || "-") !== state.brand) continue;
+    if (state.family !== "all" && it.familyId !== state.family) continue;
+    if (!matchesText(it)) continue;
+    let a = by.get(r.itemKey);
+    if (!a) by.set(r.itemKey, (a = { item: it, qty: {}, rows: [] }));
+    for (const [k, n] of Object.entries(r.qty)) a.qty[k] = (a.qty[k] || 0) + n;
+    a.rows.push(r);
+  }
+  for (const a of by.values()) a.sum = sumGroups(a.qty);
+  return [...by.values()];
+}
+
+// ---------------------------------------------------------------- render
+function render() {
+  const all = aggregate(scopedRows());
+  const totals = { qty: {} };
+  for (const a of all) for (const [k, n] of Object.entries(a.qty)) totals.qty[k] = (totals.qty[k] || 0) + n;
+  totals.sum = sumGroups(totals.qty);
+
+  renderMonths();
+  renderKpis(totals.sum);
+  renderGradeBar(totals.qty, totals.sum.total);
+
+  // A single grade (clicked in the grade bar) is narrower than a group (KPI card); only one is active at a time.
+  const pick = state.grade !== "all" ? state.grade : state.group;
+  let list = pick === "all" ? all : all.filter((a) => a.sum[pick] > 0);
+  const key = state.grade !== "all" ? state.grade : state.sort;
+  list.sort((a, b) => (key === "name" ? a.item.name.localeCompare(b.item.name, "th") : b.sum[key] - a.sum[key] || b.sum.total - a.sum.total));
+  renderFilterLine(list.length);
+  $("#list").innerHTML =
+    list.length === 0 ? `<div class="empty">ไม่มีสินค้าที่ตรงกับตัวกรอง</div>` : state.view === "table" ? tableHtml(list) : state.view === "family" ? familyHtml(list) : cardsHtml(list);
+  renderIssues();
+}
+
+function renderMonths() {
+  const opts = [...DATA.months.map((m) => ({ key: m.key, label: m.label })), { key: "all", label: "ทุกเดือน" }];
+  $("#months").innerHTML = opts.map((o) => `<button type="button" data-month="${o.key}" class="${o.key === state.month ? "on" : ""}">${esc(o.label)}</button>`).join("");
+}
+
+function renderKpis(s) {
+  const card = (cls, label, value, meta, dot) => `
+    <button type="button" class="kpi ${cls} ${state.group === cls ? "on" : ""}" data-group="${cls}" aria-pressed="${state.group === cls}">
+      <div class="label">${dot ? `<i class="dot" style="background:${dot}"></i>` : ""}${label}</div>
+      <div class="value num">${fmt(value)}<small>ชิ้น</small></div>
+      <div class="meta">${meta}</div>
+    </button>`;
+  $("#kpis").innerHTML =
+    card("all", "รับคืนทั้งหมด", s.total, `${fmt(new Set(scopedRows().map((r) => r.itemKey)).size)} รายการสินค้า`) +
+    card("sell", GROUPS.sell.label, s.sell, `${pct(s.sell, s.total)}% · ${GROUPS.sell.desc}`, GROUPS.sell.color) +
+    card("rush", GROUPS.rush.label, s.rush, `${pct(s.rush, s.total)}% · ${GROUPS.rush.desc}`, GROUPS.rush.color) +
+    card("expired", GROUPS.expired.label, s.expired, `${pct(s.expired, s.total)}% · ${GROUPS.expired.desc}`, GROUPS.expired.color);
+}
+
+function renderGradeBar(qty, total) {
+  $("#gradebar").innerHTML = DATA.grades
+    .map((g) => {
+      const n = qty[g.key] || 0;
+      const w = total ? (n / total) * 100 : 0;
+      const cls = state.grade === g.key ? "on" : state.grade !== "all" ? "dim" : "";
+      return w > 0
+        ? `<button type="button" class="${cls}" data-grade="${g.key}" style="width:${w}%;background:${gradeColor(g.key)}" title="${g.label}: ${fmt(n)} ชิ้น (${pct(n, total)}%) · กดเพื่อดูสินค้าเกรดนี้">${w > 6 ? `${g.label} ${pct(n, total)}%` : ""}</button>`
+        : "";
+    })
+    .join("");
+  const month = DATA.months.find((m) => m.key === state.month);
+  $("#gradeHint").textContent = month ? `ช่วงอายุตามหัวคอลัมน์ในแท็บ ${month.sheet}` : "เลือกเดือนเพื่อดูช่วงวันหมดอายุของแต่ละเกรด";
+  $("#legend").innerHTML = DATA.grades
+    .map((g) => {
+      const n = qty[g.key] || 0;
+      const note = month?.gradeNotes?.[g.key] || GROUPS[g.group].label;
+      const cls = state.grade === g.key ? "on" : state.grade !== "all" ? "dim" : "";
+      return `<li><button type="button" class="${cls}" data-grade="${g.key}" aria-pressed="${state.grade === g.key}" ${n ? "" : "disabled"} title="กดเพื่อดูสินค้าเกรด ${g.label}"><span class="sw" style="background:${gradeColor(g.key)}">${g.label}</span><b class="num">${fmt(n)}</b><span class="note">${esc(note)}</span></button></li>`;
+    })
+    .join("");
+}
+
+function renderFilterLine(count) {
+  const chips = [];
+  if (state.group !== "all") chips.push(`<button class="chip" data-clear="group">${GROUPS[state.group].label} ✕</button>`);
+  if (state.grade !== "all") chips.push(`<button class="chip" data-clear="grade">เกรด ${esc(DATA.grades.find((g) => g.key === state.grade)?.label)} ✕</button>`);
+  if (state.family !== "all") chips.push(`<button class="chip" data-clear="family">สารสกัด ${esc(familyLabel(state.family))} ✕</button>`);
+  if (state.brand !== "all") chips.push(`<button class="chip" data-clear="brand">${esc(DATA.brands.find((b) => b.id === state.brand)?.name)} ✕</button>`);
+  if (state.location !== "all") chips.push(`<button class="chip" data-clear="location">${esc(state.location)} ✕</button>`);
+  if (state.q) chips.push(`<button class="chip" data-clear="q">"${esc(state.q)}" ✕</button>`);
+  $("#filterline").innerHTML = `<span>${fmt(count)} รายการ</span>${chips.join("")}`;
+}
+
+function thumb(it, size = "sm") {
+  const src = it.image?.[size] ?? it.image?.sm;
+  if (src) return `<img src="${esc(imgSrc(src))}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',textContent:'${esc(it.sku).slice(0, 8)}'}))" />`;
+  return `<div class="ph">${esc(it.sku.split("-")[0])}</div>`;
+}
+
+function miniBar(qty, total, h = 8) {
+  return `<div class="mini" style="height:${h}px">${DATA.grades
+    .map((g) => (qty[g.key] ? `<span style="width:${(qty[g.key] / total) * 100}%;background:${gradeColor(g.key)}" title="${g.label}: ${fmt(qty[g.key])}"></span>` : ""))
+    .join("")}</div>`;
+}
+
+const matchFlag = (it) => (it.match === "none" ? `<span class="flag none">ไม่พบในแคตาล็อก</span>` : it.match === "product" ? `<span class="flag">ตรวจขนาด</span>` : "");
+
+function cardsHtml(list) {
+  // The big number follows the selected group (ขายต่อได้ by default).
+  const focus = state.group === "all" ? "sell" : state.group;
+  const grade = DATA.grades.find((g) => g.key === state.grade);
+  return `<div class="cards">${list
+    .map((a) => {
+      const it = a.item;
+      const s = a.sum;
+      const others = ["rush", "expired", "sell"].filter((g) => g !== focus && s[g]);
+      return `<button type="button" class="card" data-item="${esc(it.key)}">
+        <div class="thumb">${thumb(it)}${matchFlag(it)}</div>
+        <div class="card-body">
+          <div class="name" title="${esc(it.name)}">${esc(it.name)}</div>
+          <div class="skuline"><span class="mono">${esc(it.sku)}</span>${it.brandName ? `· ${esc(it.brandName)}` : ""}</div>
+          ${
+            grade
+              ? `<div class="big"><span class="n num" style="color:${GROUPS[grade.group].color}">${fmt(s[grade.key])}</span><span class="t">เกรด ${grade.label} · ${GROUPS[grade.group].label}</span></div>`
+              : `<div class="big"><span class="n num ${s[focus] ? "" : "zero"}" style="color:${s[focus] ? GROUPS[focus].color : ""}">${fmt(s[focus])}</span><span class="t">${GROUPS[focus].label}</span></div>`
+          }
+          ${miniBar(a.qty, s.total)}
+          <div class="subline"><span>รวม <b class="num">${fmt(s.total)}</b></span>${others.map((g) => `<span class="${g}">${GROUPS[g].label} ${fmt(s[g])}</span>`).join("")}</div>
+        </div>
+      </button>`;
+    })
+    .join("")}</div>`;
+}
+
+function tableHtml(list) {
+  const g = DATA.grades;
+  const foot = { qty: {} };
+  for (const a of list) for (const [k, n] of Object.entries(a.qty)) foot.qty[k] = (foot.qty[k] || 0) + n;
+  foot.sum = sumGroups(foot.qty);
+  const cell = (n) => `<td class="r num ${n ? "" : "zero"}">${n ? fmt(n) : "–"}</td>`;
+  return `<div class="tablewrap"><table>
+    <thead><tr><th></th><th>สินค้า</th><th>SKU</th>${g.map((x) => `<th class="r"><span class="gh"><i style="background:${gradeColor(x.key)}"></i>${x.label}</span></th>`).join("")}<th class="r">ขายต่อได้</th><th class="r">รวม</th></tr></thead>
+    <tbody>${list
+      .map(
+        (a) => `<tr data-item="${esc(a.item.key)}">
+          <td>${a.item.image ? `<img class="tthumb" src="${esc(imgSrc(a.item.image.sm))}" alt="" loading="lazy" />` : ""}</td>
+          <td class="pname">${esc(a.item.name)}</td>
+          <td class="mono">${esc(a.item.sku)}</td>
+          ${g.map((x) => cell(a.qty[x.key])).join("")}
+          <td class="r num sellcol">${fmt(a.sum.sell)}</td>
+          <td class="r num"><b>${fmt(a.sum.total)}</b></td></tr>`,
+      )
+      .join("")}</tbody>
+    <tfoot><tr><td></td><td>รวม ${fmt(list.length)} รายการ</td><td></td>${g.map((x) => `<td class="r num">${fmt(foot.qty[x.key])}</td>`).join("")}<td class="r num sellcol">${fmt(foot.sum.sell)}</td><td class="r num">${fmt(foot.sum.total)}</td></tr></tfoot>
+  </table></div>`;
+}
+
+/** One section per extract family; rows inside keep the selected sort. Sections are ordered by the same sort key. */
+function familyHtml(list) {
+  const groups = new Map();
+  for (const a of list) {
+    const id = a.item.familyId;
+    if (!groups.has(id)) groups.set(id, { id, items: [], qty: {} });
+    const g = groups.get(id);
+    g.items.push(a);
+    for (const [k, n] of Object.entries(a.qty)) g.qty[k] = (g.qty[k] || 0) + n;
+  }
+  const key = state.sort;
+  const fams = [...groups.values()].map((g) => ({ ...g, sum: sumGroups(g.qty) }));
+  fams.sort((a, b) => (key === "name" ? familyLabel(a.id).localeCompare(familyLabel(b.id), "th") : b.sum[key] - a.sum[key] || b.sum.total - a.sum.total));
+  // unknown family always last
+  const unknown = fams.findIndex((f) => f.id === "-");
+  if (unknown >= 0) fams.push(...fams.splice(unknown, 1));
+  return `<div class="fams">${fams
+    .map(
+      (f) => `<section class="fam">
+        <header class="fam-head">
+          <button type="button" class="fam-name" data-family="${esc(f.id)}" title="กรองเฉพาะสารสกัดนี้">${esc(familyLabel(f.id))}</button>
+          <span class="muted">${fmt(f.items.length)} รายการ</span>
+          <span class="fam-nums"><b class="num">${fmt(f.sum.total)}</b> ชิ้น · <span class="sell">ขายต่อได้ ${fmt(f.sum.sell)}</span>${f.sum.rush ? ` · <span class="rush">รีบระบาย ${fmt(f.sum.rush)}</span>` : ""}${f.sum.expired ? ` · <span class="expired">หมดอายุ ${fmt(f.sum.expired)}</span>` : ""}</span>
+        </header>
+        ${miniBar(f.qty, f.sum.total, 10)}
+        <div class="fam-rows">${f.items
+          .map(
+            (a) => `<button type="button" class="fam-row" data-item="${esc(a.item.key)}">
+              <span class="fam-thumb">${thumb(a.item)}</span>
+              <span class="fam-info"><span class="fam-pname">${esc(a.item.name)}</span><span class="mono muted">${esc(a.item.sku)}</span></span>
+              <span class="fam-bar">${miniBar(a.qty, a.sum.total)}</span>
+              <span class="fam-q"><b class="num ${a.sum.sell ? "sell" : "zero"}">${fmt(a.sum.sell)}</b><small>ขายได้</small></span>
+              <span class="fam-q q-rush"><b class="num ${a.sum.rush ? "rush" : "zero"}">${fmt(a.sum.rush)}</b><small>รีบระบาย</small></span>
+              <span class="fam-q q-exp"><b class="num ${a.sum.expired ? "expired" : "zero"}">${fmt(a.sum.expired)}</b><small>หมดอายุ</small></span>
+              <span class="fam-q"><b class="num">${fmt(a.sum.total)}</b><small>รวม</small></span>
+            </button>`,
+          )
+          .join("")}</div>
+      </section>`,
+    )
+    .join("")}</div>`;
+}
+
+function scopedIssues() {
+  const sheets = state.month === "all" ? null : new Set(DATA.months.filter((m) => m.key === state.month).map((m) => m.sheet));
+  return DATA.issues.filter((i) => !sheets || sheets.has(i.sheet));
+}
+
+function renderIssues() {
+  const list = scopedIssues();
+  $("#issueCount").textContent = fmt(list.length);
+  $("#issueCount").className = "pill" + (list.length ? "" : " ok");
+  if (!list.length) {
+    $("#issues").innerHTML = `<p class="muted">ไม่มีอะไรต้องแก้ 🎉</p>`;
+    return;
+  }
+  // Group by type, then merge identical SKU + message so one problem shows once with all its rows.
+  const byType = new Map();
+  for (const i of list) {
+    if (!byType.has(i.type)) byType.set(i.type, new Map());
+    const k = `${i.skuRaw}|${i.message}`;
+    const m = byType.get(i.type);
+    if (!m.has(k)) m.set(k, { ...i, where: [] });
+    m.get(k).where.push(`${i.sheet} แถว ${i.row}`);
+  }
+  const order = Object.keys(ISSUE_TYPES);
+  $("#issues").innerHTML = [...byType.entries()]
+    .sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]))
+    .map(
+      ([type, m]) => `<div class="issue-group"><h3>${ISSUE_TYPES[type] ?? type} <span class="muted">(${[...m.values()].reduce((n, x) => n + x.where.length, 0)} แถว)</span></h3>
+        ${[...m.values()]
+          .map(
+            (i) => `<div class="issue">
+              <div><span class="mono">${esc(i.skuRaw || "—")}</span><div class="where">แท็บ ${esc(i.where.join(", "))}</div></div>
+              <div>${i.nameRaw ? `<div>${esc(i.nameRaw)}</div>` : ""}<div class="muted">${esc(i.message)}</div>${i.suggestion ? `<div class="hint">→ ${esc(i.suggestion)}</div>` : ""}</div>
+            </div>`,
+          )
+          .join("")}</div>`,
+    )
+    .join("");
+}
+
+// ---------------------------------------------------------------- detail dialog
+function openDetail(key) {
+  const a = aggregate(scopedRows()).find((x) => x.item.key === key);
+  if (!a) return;
+  const it = a.item;
+  const month = DATA.months.find((m) => m.key === state.month);
+  const issues = scopedIssues().filter((i) => i.itemKey === key);
+  const rows = [...a.rows].sort((x, y) => (x.date || "").localeCompare(y.date || "") || x.row - y.row);
+  const showLoc = rows.some((r) => r.location);
+  const dlg = $("#detail");
+  dlg.innerHTML = `
+    <button class="d-close" type="button" aria-label="ปิด" data-close>✕</button>
+    <div class="d-head">
+      <div class="thumb">${thumb(it, "lg")}</div>
+      <div>
+        <div class="muted">${esc(it.brandName)} · สารสกัด ${esc(familyLabel(it.familyId))} · ${esc(it.matchLabel)}</div>
+        <h2 class="d-title" id="dTitle">${esc(it.name)}</h2>
+        ${it.nameEn ? `<div class="muted">${esc(it.nameEn)}</div>` : ""}
+        <div style="margin-top:6px"><span class="tag mono">${esc(it.sku)}</span>${it.rawSkus.filter((s) => s !== it.sku).map((s) => `<span class="tag mono" title="SKU ที่พิมพ์ในไฟล์">${esc(s)}</span>`).join("")}</div>
+        <div class="big" style="margin-top:10px"><span class="n num ${a.sum.sell ? "" : "zero"}">${fmt(a.sum.sell)}</span><span class="t">ขายต่อได้ จากทั้งหมด ${fmt(a.sum.total)} ชิ้น ${state.month === "all" ? "(ทุกเดือน)" : `(${esc(month?.label)})`}</span></div>
+        ${miniBar(a.qty, a.sum.total, 10)}
+        <div class="d-grades">${DATA.grades
+          .map((g) => `<div style="border-left:4px solid ${gradeColor(g.key)}"><span>${g.label}</span><b class="num">${fmt(a.qty[g.key] || 0)}</b><span class="muted">${esc(month?.gradeNotes?.[g.key] || GROUPS[g.group].label)}</span></div>`)
+          .join("")}</div>
+      </div>
+    </div>
+    <div class="d-body">
+      ${
+        issues.length
+          ? `<div class="banner">${issues.map((i) => `• ${esc(i.message)}${i.suggestion ? ` <b>→ ${esc(i.suggestion)}</b>` : ""} <span class="muted">(${esc(i.sheet)} แถว ${i.row})</span>`).join("<br>")}</div>`
+          : ""
+      }
+      <h3 style="font-size:15px">รายการที่มาจากไฟล์ Excel (${fmt(rows.length)} แถว)</h3>
+      <div class="tablewrap"><table>
+        <thead><tr><th>วันที่</th><th>SKU ในไฟล์</th><th>ชื่อในไฟล์</th>${DATA.grades.map((g) => `<th class="r"><span class="gh"><i style="background:${gradeColor(g.key)}"></i>${g.label}</span></th>`).join("")}${showLoc ? "<th>Location</th>" : ""}<th>แท็บ / แถว</th></tr></thead>
+        <tbody>${rows
+          .map(
+            (r) => `<tr style="cursor:default"><td>${r.date ? thDate(r.date) : `<span class="muted">${esc(r.dateRaw || "—")}</span>`}</td><td class="mono">${esc(r.skuRaw)}</td><td style="white-space:normal;min-width:200px">${esc(r.nameRaw)}</td>
+              ${DATA.grades.map((g) => `<td class="r num ${r.qty[g.key] ? "" : "zero"}">${r.qty[g.key] ? fmt(r.qty[g.key]) : "–"}</td>`).join("")}${showLoc ? `<td>${esc(r.location)}</td>` : ""}<td class="muted">${esc(r.sheet)} / ${r.row}</td></tr>`,
+          )
+          .join("")}</tbody>
+      </table></div>
+    </div>`;
+  dlg.showModal();
+}
+
+// ---------------------------------------------------------------- filters & events
+function fillSelects() {
+  const brands = [...DATA.brands].sort((a, b) => a.name.localeCompare(b.name));
+  $("#brand").innerHTML = `<option value="all">ทุกแบรนด์</option>` + brands.map((b) => `<option value="${esc(b.id)}">${esc(b.name)}</option>`).join("");
+  if (!brands.some((b) => b.id === state.brand)) state.brand = "all";
+  $("#brand").value = state.brand;
+  $("#family").innerHTML = `<option value="all">ทุกสารสกัด</option>` + DATA.families.map((f) => `<option value="${esc(f.id)}">${esc(f.label)}</option>`).join("");
+  if (!DATA.families.some((f) => f.id === state.family)) state.family = "all";
+  $("#family").value = state.family;
+  const locs = DATA.locations;
+  $("#location").hidden = locs.length === 0;
+  $("#location").innerHTML = `<option value="all">ทุก Location</option>` + locs.map((l) => `<option>${esc(l)}</option>`).join("");
+  if (!locs.includes(state.location)) state.location = "all";
+  $("#location").value = state.location;
+  $("#sort").value = state.sort;
+  document.querySelectorAll(".seg button").forEach((b) => b.classList.toggle("on", b.dataset.view === state.view));
+}
+
+function renderChrome() {
+  $("#source").textContent = SNAPSHOT
+    ? `ข้อมูล ณ ${thDateTime(DATA.exportedAt)} · จากไฟล์ ${DATA.source.file}`
+    : `ไฟล์ ${DATA.source.file} · แก้ไขล่าสุด ${thDateTime(DATA.source.modifiedAt)}`;
+  const banners = [];
+  if (!DATA.catalog.ok) banners.push(`<div class="banner">อ่านแคตาล็อกสินค้าจาก jlc-product-info ไม่ได้ (${esc(DATA.catalog.error)}) จึงแสดงชื่อจากไฟล์ Excel และไม่มีรูปสินค้า</div>`);
+  $("#banner").innerHTML = banners.join("");
+  $("#foot").innerHTML = [
+    DATA.catalog.ok ? `ชื่อและรูปสินค้าจาก jlc-product-info (อัปเดต ${thDateTime(DATA.catalog.generatedAt)})` : "",
+    DATA.locations.length ? "" : `ยังไม่มีข้อมูล Location — ถ้ากรอกช่อง "อื่นๆ" (เช่น Zentro) ในแถวที่มีจำนวน จะกรองตามที่เก็บสินค้าได้`,
+  ]
+    .filter(Boolean)
+    .join("<br>");
+}
+
+async function load() {
+  $("#refresh").disabled = true;
+  try {
+    if (SNAPSHOT) DATA = SNAPSHOT;
+    else {
+      const res = await fetch("/api/data", { cache: "no-store" });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error || res.statusText);
+      DATA = body;
+    }
+    if (!state.month || (state.month !== "all" && !DATA.months.some((m) => m.key === state.month))) state.month = DATA.months.at(-1)?.key ?? "all";
+    fillSelects();
+    renderChrome();
+    render();
+  } catch (e) {
+    $("#banner").innerHTML = `<div class="banner err">โหลดข้อมูลไม่ได้: ${esc(e.message)}</div>`;
+  } finally {
+    $("#refresh").disabled = false;
+  }
+}
+
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("[data-month],[data-group],[data-grade],[data-family],[data-item],[data-view],[data-clear],[data-close]");
+  if (!t) {
+    if (e.target === $("#detail")) $("#detail").close(); // click on backdrop
+    return;
+  }
+  if (t.dataset.close !== undefined) return $("#detail").close();
+  if (t.dataset.month) state.month = t.dataset.month;
+  else if (t.dataset.group) {
+    state.group = state.group === t.dataset.group ? "all" : t.dataset.group;
+    state.grade = "all";
+    if (state.group !== "all") state.sort = state.group;
+    $("#sort").value = state.sort;
+  } else if (t.dataset.grade) {
+    state.grade = state.grade === t.dataset.grade ? "all" : t.dataset.grade;
+    state.group = "all";
+    if (state.grade !== "all") document.querySelector("#list").closest(".panel").scrollIntoView({ behavior: "smooth", block: "start" });
+  } else if (t.dataset.family) {
+    state.family = state.family === t.dataset.family ? "all" : t.dataset.family;
+    $("#family").value = state.family;
+  } else if (t.dataset.item) return openDetail(t.dataset.item);
+  else if (t.dataset.view) {
+    state.view = t.dataset.view;
+    document.querySelectorAll(".seg button").forEach((b) => b.classList.toggle("on", b === t));
+  } else if (t.dataset.clear) {
+    state[t.dataset.clear] = t.dataset.clear === "q" ? "" : "all";
+    if (t.dataset.clear === "q") $("#q").value = "";
+    if (t.dataset.clear === "brand") $("#brand").value = "all";
+    if (t.dataset.clear === "family") $("#family").value = "all";
+    if (t.dataset.clear === "location") $("#location").value = "all";
+  }
+  save();
+  render();
+});
+$("#q").addEventListener("input", (e) => {
+  state.q = e.target.value.trim();
+  render();
+});
+for (const id of ["family", "brand", "location", "sort"]) {
+  $("#" + id).addEventListener("change", (e) => {
+    state[id] = e.target.value;
+    save();
+    render();
+  });
+}
+$("#refresh").addEventListener("click", load);
+if (SNAPSHOT) {
+  // exported file: no server to refresh from or export again
+  $("#refresh").hidden = true;
+  $("#export").hidden = true;
+}
+$("#export").addEventListener("click", async () => {
+  const btn = $("#export");
+  const label = btn.textContent;
+  btn.disabled = true;
+  try {
+    const { exportHtml } = await import("./export.js");
+    const { bytes, file } = await exportHtml(DATA, (msg) => (btn.textContent = msg));
+    btn.textContent = `✓ บันทึก ${file} (${(bytes / 1024 / 1024).toFixed(1)} MB)`;
+    setTimeout(() => (btn.textContent = label), 6000);
+  } catch (e) {
+    btn.textContent = label;
+    $("#banner").innerHTML = `<div class="banner err">ส่งออกไม่สำเร็จ: ${esc(e.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "/" && document.activeElement !== $("#q")) {
+    e.preventDefault();
+    $("#q").focus();
+  }
+});
+
+load();

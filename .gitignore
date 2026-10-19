@@ -1,0 +1,10 @@
+# installed packages (the .bat runs npm install)
+node_modules/
+
+# company data stays on this computer only (repo is public)
+*.xlsx
+~$*.xlsx
+CN-Dashboard-*.html
+
+# local Claude settings
+.claude/settings.local.json
