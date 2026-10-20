@@ -1015,3 +1015,72 @@ dialog::backdrop {
   background: var(--rush-soft);
   color: var(--rush);
 }
+
+/* days to expiry — same colours everywhere */
+.exp {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.exp-ok {
+  background: var(--sell-soft);
+  color: var(--sell);
+}
+.exp-180 {
+  background: #fdf5dc;
+  color: #8a6d00;
+}
+.exp-90 {
+  background: #fdeedd;
+  color: #b4560e;
+}
+.exp-gone {
+  background: var(--expired-soft);
+  color: var(--expired);
+}
+.exp-line {
+  font-size: 12.5px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.exp-strip {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+}
+.exp-strip > div {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.exp-strip .sw {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 700;
+  display: inline-grid;
+  place-items: center;
+  font-size: 11px;
+}
+.d-grades .exp,
+.legend .exp {
+  margin-top: 4px;
+  white-space: normal; /* narrow grade boxes on phones */
+  max-width: 100%;
+}
+
+.nowrap {
+  white-space: nowrap;
+}

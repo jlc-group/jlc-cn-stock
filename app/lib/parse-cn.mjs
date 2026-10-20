@@ -95,12 +95,50 @@ export function splitNote(raw) {
   return { name: s.slice(0, i).trim(), note: s.slice(i).replace(/^\/+\s*/, "").trim() };
 }
 
+const lastDay = (y, m) => new Date(Date.UTC(y, m, 0)).getUTCDate(); // m is 1-based
+/** "2026-09-25" + 18 months → "2028-03-25" (day clamped to the month's length). */
+export function addMonths(isoDate, n) {
+  const [y, m, d] = isoDate.split("-").map(Number);
+  const t = new Date(Date.UTC(y, m - 1 + n, 1));
+  const ty = t.getUTCFullYear();
+  const tm = t.getUTCMonth() + 1;
+  return iso(ty, tm, Math.min(d, lastDay(ty, tm)));
+}
+
+/**
+ * Expiry date range of a grade, from its column header (the sheet holds no per-row expiry dates).
+ *   "04/27-09/27"  → 2027-04-01 … 2027-09-30
+ *   "18-24"        → base + 18 months … base + 24 months   (months left; approx)
+ *   "ต่ำกว่า6"      → base … base + 6 months                 (approx)
+ *   "หมดอายุ 10/26" → 2026-10-01 … 2026-10-31
+ *   "หมดอายุ"       → already expired
+ * `base` is the row's receive date, or the first day of the sheet's month when the row has none.
+ * @returns {{ from?: string, to?: string, expired?: boolean, approx?: boolean } | null}
+ */
+export function gradeRange(label, base) {
+  const t = String(label ?? "").trim().replace(/\s+/g, " ");
+  let m;
+  if ((m = /^(\d{1,2})\/(\d{2})\s*-\s*(\d{1,2})\/(\d{2})$/.exec(t))) {
+    const [y1, m1, y2, m2] = [2000 + Number(m[2]), Number(m[1]), 2000 + Number(m[4]), Number(m[3])];
+    return { from: iso(y1, m1, 1), to: iso(y2, m2, lastDay(y2, m2)) };
+  }
+  if ((m = /^(\d+)\s*-\s*(\d+)$/.exec(t))) return { from: addMonths(base, Number(m[1])), to: addMonths(base, Number(m[2])), approx: true };
+  if ((m = /^ต่ำกว่า\s*(\d+)$/.exec(t))) return { from: base, to: addMonths(base, Number(m[1])), approx: true };
+  if ((m = /^หมดอายุ\s*(\d{1,2})\/(\d{2})$/.exec(t))) {
+    const [y, mo] = [2000 + Number(m[2]), Number(m[1])];
+    return { from: iso(y, mo, 1), to: iso(y, mo, lastDay(y, mo)) };
+  }
+  if (/^หมดอายุ$/.test(t)) return { expired: true };
+  return null;
+}
+
 const text = (cell) => (cell && cell.v !== undefined && cell.v !== null ? String(cell.w ?? cell.v).trim() : "");
 
 /** Find columns from the header row. */
 export function readHeader(ws, range) {
   const cols = { date: -1, sku: -1, name: -1, location: -1, grades: {} };
   const notes = {};
+  const labels = {}; // raw text after "=", turned into expiry ranges per row
   for (let c = range.s.c; c <= range.e.c; c++) {
     const h = text(ws[XLSX.utils.encode_cell({ r: range.s.r, c })]);
     if (!h) continue;
@@ -109,12 +147,13 @@ export function readHeader(ws, range) {
       const grade = GRADES.find((x) => x.label === g[1].toUpperCase());
       cols.grades[grade.key] = c;
       notes[grade.key] = gradeNote(g[2]);
+      labels[grade.key] = g[2];
     } else if (h.startsWith("วันที่")) cols.date = c;
     else if (h.toUpperCase() === "SKU") cols.sku = c;
     else if (h.startsWith("ชื่อสินค้า")) cols.name = c;
     else if (h.startsWith("อื่น") || /location/i.test(h)) cols.location = c;
   }
-  return { cols, notes };
+  return { cols, notes, labels };
 }
 
 /**
@@ -131,7 +170,7 @@ export function parseWorkbook(wb) {
     const ws = wb.Sheets[sheet];
     if (!ws || !ws["!ref"]) continue;
     const range = XLSX.utils.decode_range(ws["!ref"]);
-    const { cols, notes } = readHeader(ws, range);
+    const { cols, notes, labels } = readHeader(ws, range);
     if (cols.sku < 0 || Object.keys(cols.grades).length === 0) {
       issues.push({ type: "sheet", sheet, row: 1, message: "หาหัวคอลัมน์ SKU หรือคอลัมน์เกรดไม่เจอ แท็บนี้ถูกข้าม" });
       continue;
@@ -169,13 +208,20 @@ export function parseWorkbook(wb) {
         location: text(cell(r, cols.location)),
         qty,
         total,
+        expiry: {},
       };
+      // expiry range per grade in this row; months-left headers count from the receive date
+      const base = d.date ?? `${month.key}-01`;
+      for (const k of Object.keys(qty)) {
+        const range = gradeRange(labels[k], base);
+        if (range) row.expiry[k] = range;
+      }
       if (!skuRaw) issues.push({ type: "no-sku", sheet, row: sheetRow, nameRaw: row.nameRaw, message: "มีจำนวนแต่ไม่มี SKU" });
       if (total === 0) issues.push({ type: "no-qty", sheet, row: sheetRow, skuRaw, nameRaw: row.nameRaw, message: "มี SKU แต่ไม่มีจำนวนในช่องเกรด" });
       // "-" is how the team marks rows without a receive date (e.g. a stock count at a location): not an error
       const noDateOnPurpose = /^-+$/.test(d.raw);
       if (!d.ok && !noDateOnPurpose) issues.push({ type: "date", sheet, row: sheetRow, skuRaw, nameRaw: row.nameRaw, message: d.raw ? `อ่านวันที่ไม่ได้: "${d.raw}"` : "ไม่มีวันที่" });
-      else if (d.ok && d.raw &&!/^\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}$/.test(d.raw)) issues.push({ type: "date-text", sheet, row: sheetRow, skuRaw, nameRaw: row.nameRaw, message: `วันที่เป็นข้อความ "${d.raw}" ใช้วันแรก (${d.date})` });
+      else if (d.ok && d.raw && !/^\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}$/.test(d.raw)) issues.push({ type: "date-text", sheet, row: sheetRow, skuRaw, nameRaw: row.nameRaw, message: `วันที่เป็นข้อความ "${d.raw}" ใช้วันแรก (${d.date})` });
       rows.push(row);
     }
   }

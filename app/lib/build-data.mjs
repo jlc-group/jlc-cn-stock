@@ -140,6 +140,7 @@ export function buildData({ xlsx, catalogFile, skuMapFile, extraImageDir, extrac
       itemKey,
       qty: r.qty,
       total: r.total,
+      expiry: r.expiry, // per grade { from, to, expired?, approx? } — days left are counted in the page, from today
     });
   }
 

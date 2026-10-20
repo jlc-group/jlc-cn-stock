@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import XLSX from "xlsx";
-import { cleanSku, gradeNote, monthFromSheet, parseDate, parseWorkbook, splitNote } from "./parse-cn.mjs";
+import { addMonths, cleanSku, gradeNote, gradeRange, monthFromSheet, parseDate, parseWorkbook, splitNote } from "./parse-cn.mjs";
 
 test("monthFromSheet reads MM.YY tabs and skips others", () => {
   assert.deepEqual(monthFromSheet("09.26"), { key: "2026-09", label: "ก.ย. 69" });
@@ -78,4 +78,23 @@ test('"-" in the date column is a deliberate no-date, not an issue', () => {
   assert.equal(rows[0].note, "ไม่มีกล่อง");
   assert.equal(rows[0].nameRaw, "ดีดีครีม 40g");
   assert.deepEqual(issues.map((i) => [i.row, i.type]), [[3, "date"]]); // only the truly empty date is flagged
+});
+
+test("gradeRange turns every header style into an expiry date range", () => {
+  assert.deepEqual(gradeRange("10/28-07/29", "2026-09-25"), { from: "2028-10-01", to: "2029-07-31" });
+  assert.deepEqual(gradeRange("04/27-09/27", "2026-10-05"), { from: "2027-04-01", to: "2027-09-30" });
+  assert.deepEqual(gradeRange("18-24", "2026-09-25"), { from: "2028-03-25", to: "2028-09-25", approx: true });
+  assert.deepEqual(gradeRange("ต่ำกว่า6 ", "2026-09-01"), { from: "2026-09-01", to: "2027-03-01", approx: true });
+  assert.deepEqual(gradeRange("หมดอายุ  10/26", "2026-10-05"), { from: "2026-10-01", to: "2026-10-31" });
+  assert.deepEqual(gradeRange("หมดอายุ", "2026-09-25"), { expired: true });
+  assert.equal(gradeRange("", "2026-09-25"), null);
+  assert.equal(addMonths("2026-08-31", 6), "2027-02-28");
+});
+
+test("rows carry expiry per grade; months-left headers count from the row date, or the sheet month for '-'", () => {
+  const head = ["วันที่", "SKU", "ชื่อสินค้า", "A=18-24", "X=หมดอายุ"];
+  const wb = book({ "09.26": [head, [25471, "L3-8G", "ดีดี", 10, 2], ["-", "L3-8G", "ดีดี", 5, null]] });
+  const { rows } = parseWorkbook(wb);
+  assert.deepEqual(rows[0].expiry, { A: { from: "2028-03-25", to: "2028-09-25", approx: true }, X: { expired: true } });
+  assert.deepEqual(rows[1].expiry, { A: { from: "2028-03-01", to: "2028-09-01", approx: true } });
 });

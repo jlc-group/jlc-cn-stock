@@ -41,6 +41,73 @@ const save = () => {
 
 const gradeColor = (k) => `var(--g-${k})`;
 const familyLabel = (id) => DATA.families?.find((f) => f.id === id)?.label ?? "";
+
+// ---------------------------------------------------------------- days to expiry (one logic for every view)
+// Rows carry an expiry range per grade, read from the column headers (see gradeRange in app/lib/parse-cn.mjs).
+// Days are counted from today on the viewer's machine, so an exported file stays current when opened later.
+const DAY_MS = 86400000;
+const todayUtc = () => {
+  const n = new Date();
+  return Date.UTC(n.getFullYear(), n.getMonth(), n.getDate());
+};
+const daysUntil = (isoDate) => Math.round((Date.parse(isoDate + "T00:00:00Z") - todayUtc()) / DAY_MS);
+const thMonthYear = (isoDate) => new Date(isoDate + "T00:00:00").toLocaleDateString("th-TH", { month: "short", year: "2-digit" });
+
+/** Combine the expiry ranges of these rows for the given grades → { min, max, from, to, approx } in days, or null. */
+function expiryOf(rows, gradeKeys) {
+  let e = null;
+  for (const r of rows) {
+    for (const k of gradeKeys) {
+      const x = r.qty[k] ? r.expiry?.[k] : null;
+      if (!x) continue;
+      e ??= { min: Infinity, max: -Infinity, from: null, to: null, approx: false };
+      if (x.expired) {
+        e.min = Math.min(e.min, -1);
+        e.max = Math.max(e.max, -1);
+        continue;
+      }
+      e.min = Math.min(e.min, daysUntil(x.from));
+      e.max = Math.max(e.max, daysUntil(x.to));
+      if (!e.from || x.from < e.from) e.from = x.from;
+      if (!e.to || x.to > e.to) e.to = x.to;
+      e.approx ||= !!x.approx;
+    }
+  }
+  return e;
+}
+
+/** "หมดอายุแล้ว" · "อีกไม่เกิน N วัน" (part may already be expired) · "อีก N–M วัน" ("~" = estimated from months-left headers) */
+function expiryText(e) {
+  if (!e) return "";
+  if (e.max < 0) return "หมดอายุแล้ว";
+  const t = e.approx ? "~" : "";
+  if (e.min <= 0) return `อีกไม่เกิน ${t}${fmt(e.max)} วัน`;
+  return e.min === e.max ? `อีก ${t}${fmt(e.min)} วัน` : `อีก ${t}${fmt(e.min)}–${fmt(e.max)} วัน`;
+}
+const expiryLevel = (e) => (!e ? "" : e.max < 0 ? "exp-gone" : e.min <= 90 ? "exp-90" : e.min <= 180 ? "exp-180" : "exp-ok");
+const expiryRange = (e) => {
+  if (!e?.from) return "";
+  const [a, b] = [thMonthYear(e.from), thMonthYear(e.to)];
+  return a === b ? a : `${a} – ${b}`;
+};
+const expiryBadge = (e, extra = "") => (e ? `<span class="exp ${expiryLevel(e)}">${esc(expiryText(e))}${extra}</span>` : "");
+
+/** The stock that expires first among grades not yet expired (A+ … D); falls back to grade X when only X is left. */
+function soonest(a) {
+  let best = null;
+  for (const g of DATA.grades) {
+    if (g.group === "expired" || !a.qty[g.key]) continue;
+    const e = expiryOf(a.rows, [g.key]);
+    if (e && e.max >= 0 && (!best || e.min < best.e.min)) best = { e, grade: g };
+  }
+  if (best) return best;
+  const x = expiryOf(a.rows, DATA.grades.filter((g) => g.group === "expired").map((g) => g.key));
+  return x ? { e: x, grade: DATA.grades.find((g) => g.group === "expired") } : null;
+}
+const soonestDays = (a) => {
+  const s = soonest(a);
+  return s ? s.e.min : Infinity;
+};
 const groupOf = (k) => DATA.grades.find((g) => g.key === k)?.group;
 
 function sumGroups(qty) {
@@ -93,7 +160,7 @@ function render() {
 
   renderMonths();
   renderKpis(totals.sum);
-  renderGradeBar(totals.qty, totals.sum.total);
+  renderGradeBar(totals.qty, totals.sum.total, all.flatMap((a) => a.rows));
 
   // A single grade (clicked in the grade bar) is narrower than a group (KPI card); only one is active at a time.
   const pick = state.grade !== "all" ? state.grade : state.group;
@@ -105,7 +172,9 @@ function render() {
   $("#mismatch").setAttribute("aria-pressed", String(state.codeMismatch));
   if (state.codeMismatch) list = mismatched;
   const key = state.grade !== "all" ? state.grade : state.sort;
-  list.sort((a, b) => (key === "name" ? a.item.name.localeCompare(b.item.name, "th") : b.sum[key] - a.sum[key] || b.sum.total - a.sum.total));
+  list.sort((a, b) =>
+    key === "name" ? a.item.name.localeCompare(b.item.name, "th") : key === "expiry" ? soonestDays(a) - soonestDays(b) || b.sum.total - a.sum.total : b.sum[key] - a.sum[key] || b.sum.total - a.sum.total,
+  );
   renderFilterLine(list.length);
   $("#list").innerHTML =
     list.length === 0 ? `<div class="empty">ไม่มีสินค้าที่ตรงกับตัวกรอง</div>` : state.view === "table" ? tableHtml(list) : state.view === "family" ? familyHtml(list) : cardsHtml(list);
@@ -132,7 +201,7 @@ function renderKpis(s) {
     card("expired", GROUPS.expired.label, s.expired, `${pct(s.expired, s.total)}% · ${GROUPS.expired.desc}`, GROUPS.expired.color);
 }
 
-function renderGradeBar(qty, total) {
+function renderGradeBar(qty, total, rows = []) {
   $("#gradebar").innerHTML = DATA.grades
     .map((g) => {
       const n = qty[g.key] || 0;
@@ -150,7 +219,7 @@ function renderGradeBar(qty, total) {
       const n = qty[g.key] || 0;
       const note = month?.gradeNotes?.[g.key] || GROUPS[g.group].label;
       const cls = state.grade === g.key ? "on" : state.grade !== "all" ? "dim" : "";
-      return `<li><button type="button" class="${cls}" data-grade="${g.key}" aria-pressed="${state.grade === g.key}" ${n ? "" : "disabled"} title="กดเพื่อดูสินค้าเกรด ${g.label}"><span class="sw" style="background:${gradeColor(g.key)}">${g.label}</span><b class="num">${fmt(n)}</b><span class="note">${esc(note)}</span></button></li>`;
+      return `<li><button type="button" class="${cls}" data-grade="${g.key}" aria-pressed="${state.grade === g.key}" ${n ? "" : "disabled"} title="กดเพื่อดูสินค้าเกรด ${g.label}"><span class="sw" style="background:${gradeColor(g.key)}">${g.label}</span><b class="num">${fmt(n)}</b><span class="note">${esc(note)}</span>${n ? `<span class="note">${expiryBadge(expiryOf(rows, [g.key]))}</span>` : ""}</button></li>`;
     })
     .join("");
 }
@@ -207,6 +276,10 @@ function cardsHtml(list) {
               : `<div class="big"><span class="n num ${s[focus] ? "" : "zero"}" style="color:${s[focus] ? GROUPS[focus].color : ""}">${fmt(s[focus])}</span><span class="t">${GROUPS[focus].label}</span></div>`
           }
           ${miniBar(a.qty, s.total)}
+          ${(() => {
+            const sn = soonest(a);
+            return sn ? `<div class="exp-line">⏳ ใกล้หมดสุด: ${expiryBadge(sn.e)} <span class="muted">(เกรด ${esc(sn.grade.label)})</span></div>` : "";
+          })()}
           <div class="subline"><span>รวม <b class="num">${fmt(s.total)}</b></span>${others.map((g) => `<span class="${g}">${GROUPS[g].label} ${fmt(s[g])}</span>`).join("")}</div>
         </div>
       </button>`;
@@ -221,7 +294,7 @@ function tableHtml(list) {
   foot.sum = sumGroups(foot.qty);
   const cell = (n) => `<td class="r num ${n ? "" : "zero"}">${n ? fmt(n) : "–"}</td>`;
   return `<div class="tablewrap"><table>
-    <thead><tr><th></th><th>สินค้า</th><th>SKU</th>${g.map((x) => `<th class="r"><span class="gh"><i style="background:${gradeColor(x.key)}"></i>${x.label}</span></th>`).join("")}<th class="r">ขายต่อได้</th><th class="r">รวม</th></tr></thead>
+    <thead><tr><th></th><th>สินค้า</th><th>SKU</th>${g.map((x) => `<th class="r"><span class="gh"><i style="background:${gradeColor(x.key)}"></i>${x.label}</span></th>`).join("")}<th class="r">ขายต่อได้</th><th class="r">รวม</th><th>ใกล้หมดสุด</th></tr></thead>
     <tbody>${list
       .map(
         (a) => `<tr data-item="${esc(a.item.key)}">
@@ -230,10 +303,14 @@ function tableHtml(list) {
           <td class="mono">${esc(a.item.sku)}</td>
           ${g.map((x) => cell(a.qty[x.key])).join("")}
           <td class="r num sellcol">${fmt(a.sum.sell)}</td>
-          <td class="r num"><b>${fmt(a.sum.total)}</b></td></tr>`,
+          <td class="r num"><b>${fmt(a.sum.total)}</b></td>
+          <td>${(() => {
+            const sn = soonest(a);
+            return sn ? `${expiryBadge(sn.e)} <span class="muted">${esc(sn.grade.label)}</span>` : "";
+          })()}</td></tr>`,
       )
       .join("")}</tbody>
-    <tfoot><tr><td></td><td>รวม ${fmt(list.length)} รายการ</td><td></td>${g.map((x) => `<td class="r num">${fmt(foot.qty[x.key])}</td>`).join("")}<td class="r num sellcol">${fmt(foot.sum.sell)}</td><td class="r num">${fmt(foot.sum.total)}</td></tr></tfoot>
+    <tfoot><tr><td></td><td>รวม ${fmt(list.length)} รายการ</td><td></td>${g.map((x) => `<td class="r num">${fmt(foot.qty[x.key])}</td>`).join("")}<td class="r num sellcol">${fmt(foot.sum.sell)}</td><td class="r num">${fmt(foot.sum.total)}</td><td></td></tr></tfoot>
   </table></div>`;
 }
 
@@ -266,7 +343,10 @@ function familyHtml(list) {
           .map(
             (a) => `<button type="button" class="fam-row" data-item="${esc(a.item.key)}">
               <span class="fam-thumb">${thumb(a.item)}</span>
-              <span class="fam-info"><span class="fam-pname">${esc(a.item.name)}</span><span class="mono muted">${esc(a.item.sku)}</span></span>
+              <span class="fam-info"><span class="fam-pname">${esc(a.item.name)}</span><span class="mono muted">${esc(a.item.sku)} ${(() => {
+                const sn = soonest(a);
+                return sn ? `· ⏳ ${expiryBadge(sn.e)}` : "";
+              })()}</span></span>
               <span class="fam-bar">${miniBar(a.qty, a.sum.total)}</span>
               <span class="fam-q"><b class="num ${a.sum.sell ? "sell" : "zero"}">${fmt(a.sum.sell)}</b><small>ขายได้</small></span>
               <span class="fam-q q-rush"><b class="num ${a.sum.rush ? "rush" : "zero"}">${fmt(a.sum.rush)}</b><small>รีบระบาย</small></span>
@@ -391,8 +471,22 @@ function openDetail(key) {
         <div class="big" style="margin-top:10px"><span class="n num ${a.sum.sell ? "" : "zero"}">${fmt(a.sum.sell)}</span><span class="t">ขายต่อได้ จากทั้งหมด ${fmt(a.sum.total)} ชิ้น ${state.month === "all" ? "(ทุกเดือน)" : `(${esc(month?.label)})`}</span></div>
         ${miniBar(a.qty, a.sum.total, 10)}
         <div class="d-grades">${DATA.grades
-          .map((g) => `<div style="border-left:4px solid ${gradeColor(g.key)}"><span>${g.label}</span><b class="num">${fmt(a.qty[g.key] || 0)}</b><span class="muted">${esc(month?.gradeNotes?.[g.key] || GROUPS[g.group].label)}</span></div>`)
+          .map((g) => `<div style="border-left:4px solid ${gradeColor(g.key)}"><span>${g.label}</span><b class="num">${fmt(a.qty[g.key] || 0)}</b><span class="muted">${esc(month?.gradeNotes?.[g.key] || GROUPS[g.group].label)}</span>${a.qty[g.key] ? expiryBadge(expiryOf(a.rows, [g.key])) : ""}</div>`)
           .join("")}</div>
+        ${(() => {
+          const lines = DATA.grades
+            .filter((g) => a.qty[g.key])
+            .map((g) => ({ g, e: expiryOf(a.rows, [g.key]) }))
+            .filter((x) => x.e);
+          return lines.length
+            ? `<div class="exp-strip"><b>⏳ เหลืออีกกี่วันถึงหมดอายุ (นับจากวันนี้)</b>${lines
+                .map(
+                  ({ g, e }) =>
+                    `<div><span class="sw" style="background:${gradeColor(g.key)}">${g.label}</span> <span class="num">${fmt(a.qty[g.key])} ชิ้น</span> <span class="muted">${esc(expiryRange(e) || "หมดอายุแล้ว")}</span> ${expiryBadge(e)}</div>`,
+                )
+                .join("")}</div>`
+            : "";
+        })()}
       </div>
     </div>
     <div class="d-body">
@@ -403,11 +497,14 @@ function openDetail(key) {
       }
       <h3 style="font-size:15px">รายการที่มาจากไฟล์ Excel (${fmt(rows.length)} แถว)</h3>
       <div class="tablewrap"><table>
-        <thead><tr><th>วันที่</th><th>SKU ในไฟล์</th><th>ชื่อในไฟล์</th>${DATA.grades.map((g) => `<th class="r"><span class="gh"><i style="background:${gradeColor(g.key)}"></i>${g.label}</span></th>`).join("")}${showLoc ? "<th>Location</th>" : ""}${showNote ? "<th>หมายเหตุ</th>" : ""}<th>แท็บ / แถว</th></tr></thead>
+        <thead><tr><th>วันที่</th><th>SKU ในไฟล์</th><th>ชื่อในไฟล์</th>${DATA.grades.map((g) => `<th class="r"><span class="gh"><i style="background:${gradeColor(g.key)}"></i>${g.label}</span></th>`).join("")}${showLoc ? "<th>Location</th>" : ""}${showNote ? "<th>หมายเหตุ</th>" : ""}<th>หมดอายุใน</th><th>แท็บ / แถว</th></tr></thead>
         <tbody>${rows
           .map(
             (r) => `<tr style="cursor:default"><td>${r.date ? thDate(r.date) : `<span class="muted">${esc(r.dateRaw || "—")}</span>`}</td><td class="mono">${esc(r.skuRaw)}${normSku(r.skuRaw) !== normSku(r.skuUsed) ? ` <span class="muted">→ ${esc(r.skuUsed)}</span>` : ""}</td><td style="white-space:normal;min-width:200px">${esc(r.nameRaw)}</td>
-              ${DATA.grades.map((g) => `<td class="r num ${r.qty[g.key] ? "" : "zero"}">${r.qty[g.key] ? fmt(r.qty[g.key]) : "–"}</td>`).join("")}${showLoc ? `<td>${esc(r.location)}</td>` : ""}${showNote ? `<td style="white-space:normal">${r.note ? `<b>📝 ${esc(r.note)}</b>` : ""}</td>` : ""}<td class="muted">${esc(r.sheet)} / ${r.row}</td></tr>`,
+              ${DATA.grades.map((g) => `<td class="r num ${r.qty[g.key] ? "" : "zero"}">${r.qty[g.key] ? fmt(r.qty[g.key]) : "–"}</td>`).join("")}${showLoc ? `<td>${esc(r.location)}</td>` : ""}${showNote ? `<td style="white-space:normal">${r.note ? `<b>📝 ${esc(r.note)}</b>` : ""}</td>` : ""}<td style="white-space:normal">${DATA.grades
+                .filter((g) => r.qty[g.key])
+                .map((g) => `<span class="nowrap">${g.label} ${expiryBadge(expiryOf([r], [g.key]))}</span>`)
+                .join(" ")}</td><td class="muted">${esc(r.sheet)} / ${r.row}</td></tr>`,
           )
           .join("")}</tbody>
       </table></div>
