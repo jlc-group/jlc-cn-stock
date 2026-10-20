@@ -103,6 +103,7 @@ function render() {
   renderFilterLine(list.length);
   $("#list").innerHTML =
     list.length === 0 ? `<div class="empty">ไม่มีสินค้าที่ตรงกับตัวกรอง</div>` : state.view === "table" ? tableHtml(list) : state.view === "family" ? familyHtml(list) : cardsHtml(list);
+  renderCodes();
   renderIssues();
 }
 
@@ -192,7 +193,7 @@ function cardsHtml(list) {
         <div class="thumb">${thumb(it)}${matchFlag(it)}${noteFlag(a)}</div>
         <div class="card-body">
           <div class="name" title="${esc(it.name)}">${esc(it.name)}</div>
-          <div class="skuline"><span class="mono">${esc(it.sku)}</span>${it.brandName ? `· ${esc(it.brandName)}` : ""}</div>
+          <div class="skuline"><span class="mono">${esc(it.sku)}</span>${excelCodes(a).length ? `<span class="excel-code" title="รหัสที่พิมพ์ในไฟล์ Excel">ใน Excel: ${esc(excelCodes(a).join(", "))}</span>` : it.brandName ? `· ${esc(it.brandName)}` : ""}</div>
           ${
             grade
               ? `<div class="big"><span class="n num" style="color:${GROUPS[grade.group].color}">${fmt(s[grade.key])}</span><span class="t">เกรด ${grade.label} · ${GROUPS[grade.group].label}</span></div>`
@@ -272,6 +273,54 @@ function familyHtml(list) {
     .join("")}</div>`;
 }
 
+
+const normSku = (s) => String(s ?? "").toUpperCase().replace(/\s+/g, "");
+/** Codes typed in Excel (for these rows) that differ from the code the item is counted under. */
+const excelCodes = (a) => [...new Set(a.rows.map((r) => r.skuRaw).filter((s) => normSku(s) !== normSku(a.item.sku)))];
+const DECIDED = {
+  map: "สรุปไว้ (sku-map)",
+  exact: "ระบบ: ตัดช่องว่าง/ท้ายรหัส",
+  size: "ระบบ: รหัส + ขนาดจากชื่อ",
+  product: "ระบบ: รหัสตรง แต่ไม่มีขนาดนี้",
+  none: "จับคู่ไม่ได้",
+};
+
+/** Every Excel code that the dashboard counts under another code, side by side, in the selected month. */
+function renderCodes() {
+  const groups = new Map();
+  for (const r of scopedRows()) {
+    if (normSku(r.skuRaw) === normSku(r.skuUsed)) continue;
+    const k = `${r.skuRaw}|${r.skuUsed}`;
+    if (!groups.has(k)) groups.set(k, { ...r, names: new Set(), total: 0, where: [] });
+    const g = groups.get(k);
+    if (r.nameRaw) g.names.add(r.nameRaw);
+    g.total += r.total;
+    g.where.push(`${r.sheet}/${r.row}`);
+  }
+  const list = [...groups.values()].sort((a, b) => (a.decidedBy === "map" ? 0 : 1) - (b.decidedBy === "map" ? 0 : 1) || a.skuRaw.localeCompare(b.skuRaw));
+  $("#codeCount").textContent = fmt(list.length);
+  $("#codeCount").className = "pill ok";
+  $("#codes").innerHTML = list.length
+    ? `<div class="tablewrap"><table>
+      <thead><tr><th>รหัสใน Excel</th><th>ชื่อใน Excel</th><th></th><th>รหัสที่ใช้</th><th>ชื่อสินค้าที่แสดง</th><th>ใครสรุป</th><th class="r">ชิ้น</th><th>แท็บ / แถว</th></tr></thead>
+      <tbody>${list
+        .map((g) => {
+          const it = DATA.items[g.itemKey];
+          return `<tr data-item="${esc(g.itemKey)}">
+            <td class="mono">${esc(g.skuRaw)}</td>
+            <td style="white-space:normal;min-width:180px">${esc([...g.names].join(" / "))}</td>
+            <td>→</td>
+            <td class="mono"><b>${esc(g.skuUsed)}</b></td>
+            <td style="white-space:normal;min-width:200px">${esc(it?.name ?? "")}${g.mapNote ? `<div class="muted">📌 ${esc(g.mapNote)}</div>` : ""}</td>
+            <td><span class="decided ${g.decidedBy === "map" ? "map" : ""}">${esc(DECIDED[g.decidedBy] ?? g.decidedBy)}</span></td>
+            <td class="r num">${fmt(g.total)}</td>
+            <td class="muted">${esc(g.where.join(", "))}</td>
+          </tr>`;
+        })
+        .join("")}</tbody></table></div>`
+    : `<p class="muted">รหัสในไฟล์ตรงกับรหัสที่ใช้ทั้งหมด</p>`;
+}
+
 function scopedIssues() {
   const sheets = state.month === "all" ? null : new Set(DATA.months.filter((m) => m.key === state.month).map((m) => m.sheet));
   return DATA.issues.filter((i) => !sheets || sheets.has(i.sheet));
@@ -330,7 +379,8 @@ function openDetail(key) {
         <div class="muted">${esc(it.brandName)} · สารสกัด ${esc(familyLabel(it.familyId))} · ${esc(it.matchLabel)}</div>
         <h2 class="d-title" id="dTitle">${esc(it.name)}</h2>
         ${it.nameEn ? `<div class="muted">${esc(it.nameEn)}</div>` : ""}
-        <div style="margin-top:6px"><span class="tag mono">${esc(it.sku)}</span>${it.rawSkus.filter((s) => s !== it.sku).map((s) => `<span class="tag mono" title="SKU ที่พิมพ์ในไฟล์">${esc(s)}</span>`).join("")}</div>
+        <div style="margin-top:6px"><span class="muted">รหัสที่ใช้</span> <span class="tag mono"><b>${esc(it.sku)}</b></span>${excelCodes(a).length ? ` <span class="muted">· ใน Excel</span> ${excelCodes(a).map((s) => `<span class="tag mono excel-code">${esc(s)}</span>`).join("")}` : ""}</div>
+        ${[...new Set(a.rows.map((r) => r.mapNote).filter(Boolean))].map((n) => `<div class="muted" style="margin-top:4px">📌 ${esc(n)}</div>`).join("")}
         <div class="big" style="margin-top:10px"><span class="n num ${a.sum.sell ? "" : "zero"}">${fmt(a.sum.sell)}</span><span class="t">ขายต่อได้ จากทั้งหมด ${fmt(a.sum.total)} ชิ้น ${state.month === "all" ? "(ทุกเดือน)" : `(${esc(month?.label)})`}</span></div>
         ${miniBar(a.qty, a.sum.total, 10)}
         <div class="d-grades">${DATA.grades
@@ -349,7 +399,7 @@ function openDetail(key) {
         <thead><tr><th>วันที่</th><th>SKU ในไฟล์</th><th>ชื่อในไฟล์</th>${DATA.grades.map((g) => `<th class="r"><span class="gh"><i style="background:${gradeColor(g.key)}"></i>${g.label}</span></th>`).join("")}${showLoc ? "<th>Location</th>" : ""}${showNote ? "<th>หมายเหตุ</th>" : ""}<th>แท็บ / แถว</th></tr></thead>
         <tbody>${rows
           .map(
-            (r) => `<tr style="cursor:default"><td>${r.date ? thDate(r.date) : `<span class="muted">${esc(r.dateRaw || "—")}</span>`}</td><td class="mono">${esc(r.skuRaw)}</td><td style="white-space:normal;min-width:200px">${esc(r.nameRaw)}</td>
+            (r) => `<tr style="cursor:default"><td>${r.date ? thDate(r.date) : `<span class="muted">${esc(r.dateRaw || "—")}</span>`}</td><td class="mono">${esc(r.skuRaw)}${normSku(r.skuRaw) !== normSku(r.skuUsed) ? ` <span class="muted">→ ${esc(r.skuUsed)}</span>` : ""}</td><td style="white-space:normal;min-width:200px">${esc(r.nameRaw)}</td>
               ${DATA.grades.map((g) => `<td class="r num ${r.qty[g.key] ? "" : "zero"}">${r.qty[g.key] ? fmt(r.qty[g.key]) : "–"}</td>`).join("")}${showLoc ? `<td>${esc(r.location)}</td>` : ""}${showNote ? `<td style="white-space:normal">${r.note ? `<b>📝 ${esc(r.note)}</b>` : ""}</td>` : ""}<td class="muted">${esc(r.sheet)} / ${r.row}</td></tr>`,
           )
           .join("")}</tbody>

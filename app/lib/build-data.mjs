@@ -111,7 +111,8 @@ export function buildData({ xlsx, catalogFile, skuMapFile, extraImageDir, extrac
       });
     } else {
       if (m.type === "product") issues.push({ ...base, type: "size", message: m.note });
-      const mm = nameMismatch(r, m.product, index);
+      // a code someone confirmed in sku-map is trusted as is
+      const mm = m.manual ? null : nameMismatch(r, m.product, index);
       if (mm) {
         issues.push({
           ...base,
@@ -128,6 +129,9 @@ export function buildData({ xlsx, catalogFile, skuMapFile, extraImageDir, extrac
       date: r.date,
       dateRaw: r.dateRaw,
       skuRaw: r.skuRaw.trim(),
+      skuUsed: it.sku, // the code the dashboard counts this row under (shown next to the Excel code)
+      decidedBy: m.manual ? "map" : m.type, // "map" = set by hand in data/sku-map.json
+      mapNote: m.manual ? m.note : "",
       suffix: r.suffix,
       nameRaw: r.nameRaw,
       note: r.note,
