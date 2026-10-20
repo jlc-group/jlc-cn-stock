@@ -3,7 +3,7 @@
 //     เปิด CN Dashboard.bat, app/, data/, package.json …   ← โปรแกรม (ไฟล์เดียวกับในรีโป)
 //     node_modules/                                         ← package ที่ใช้ (ไม่ต้อง npm install)
 //     คัดงานCN.xlsx                                         ← ข้อมูล CN
-//     product-info/                                         ← แคตาล็อก + รูปสินค้า + รูปเพิ่มเติม (จาก jlc-product-info)
+//     catalog/                                              ← ชื่อ + รูปสินค้า (อยู่ในรีโปแล้ว อัปเดตด้วย npm run sync-products)
 //     อ่านก่อน.txt
 //
 //   npm run bundle   →  bundle/CN-Dashboard-ครบชุด-YYYY-MM-DD.zip
@@ -11,11 +11,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { parseImageName } from "../app/lib/extra-images.mjs";
 import { zipDirectory } from "./zip.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const SOURCE_INFO = path.resolve(process.env.PRODUCT_INFO_DIR || path.join(REPO, "..", "jlc-product-info"));
 const XLSX = path.resolve(process.env.CN_XLSX || path.join(REPO, "คัดงานCN.xlsx"));
 
 const d = new Date();
@@ -32,7 +30,7 @@ function need(p, what) {
   }
 }
 need(XLSX, "ไฟล์ CN");
-need(path.join(SOURCE_INFO, "data", "build", "catalog.internal.json"), "แคตาล็อกของ jlc-product-info");
+need(path.join(REPO, "catalog", "catalog.json"), "ชื่อและรูปสินค้า (สั่ง npm run sync-products ก่อน)");
 need(path.join(REPO, "node_modules", "xlsx"), " node_modules (สั่ง npm install ก่อน)");
 
 fs.rmSync(STAGE_ROOT, { recursive: true, force: true });
@@ -53,14 +51,10 @@ if (tracked) {
   }
 }
 fs.cpSync(path.join(REPO, "node_modules"), dest("node_modules"), { recursive: true });
+fs.cpSync(path.join(REPO, "catalog"), dest("catalog"), { recursive: true }); // also when not committed yet
 
 // 2) data
 fs.copyFileSync(XLSX, dest(path.basename(XLSX)));
-fs.mkdirSync(dest("product-info", "data", "build"), { recursive: true });
-fs.copyFileSync(path.join(SOURCE_INFO, "data", "build", "catalog.internal.json"), dest("product-info", "data", "build", "catalog.internal.json"));
-fs.cpSync(path.join(SOURCE_INFO, "web", "public", "media"), dest("product-info", "web", "public", "media"), { recursive: true });
-const extras = fs.readdirSync(SOURCE_INFO).filter((f) => parseImageName(f));
-for (const f of extras) fs.copyFileSync(path.join(SOURCE_INFO, f), dest("product-info", f));
 
 fs.writeFileSync(
   dest("อ่านก่อน.txt"),
@@ -70,11 +64,13 @@ fs.writeFileSync(
     "",
     "วิธีเปิด",
     "1. ติดตั้ง Node.js จาก https://nodejs.org (ครั้งเดียว ถ้าเครื่องมีแล้วข้ามได้)",
-    "2. ดับเบิลคลิก \"เปิด CN Dashboard.bat\" ในโฟลเดอร์นี้ เบราว์เซอร์จะเปิดหน้าแดชบอร์ดให้เอง",
+    "2. Windows: ดับเบิลคลิก \"เปิด CN Dashboard.bat\" ในโฟลเดอร์นี้ เบราว์เซอร์จะเปิดหน้าแดชบอร์ดให้เอง",
+    "   Linux / macOS: เปิด Terminal ในโฟลเดอร์นี้ แล้วพิมพ์  bash start-linux.sh",
+    "   แล้วเปิด http://localhost:5230 ในเบราว์เซอร์ (ถ้าเบราว์เซอร์ไม่เปิดเอง)",
     "   (อย่าย้ายไฟล์ออกจากโฟลเดอร์นี้ ทุกอย่างต้องอยู่ด้วยกัน)",
     "",
     "อัปเดตข้อมูลเดือนใหม่: วางไฟล์ คัดงานCN.xlsx ตัวใหม่ทับในโฟลเดอร์นี้ แล้วกดปุ่มรีเฟรชบนหน้าเว็บ",
-    "ถ้ารูปไม่ขึ้น: ปิดหน้าต่างสีดำของโปรแกรม แล้วดับเบิลคลิก .bat ใหม่",
+    "ถ้ารูปไม่ขึ้น: ปิดหน้าต่างโปรแกรม (หน้าต่างสีดำ / Terminal) แล้วเปิดใหม่",
     "",
   ].join("\r\n"),
   "utf8",
@@ -83,4 +79,4 @@ fs.writeFileSync(
 const count = zipDirectory(STAGE_ROOT, ZIP); // UTF-8 names, so Thai file names unzip correctly
 fs.rmSync(STAGE_ROOT, { recursive: true, force: true });
 const mb = (fs.statSync(ZIP).size / 1024 / 1024).toFixed(1);
-console.log(`สร้างแล้ว: ${ZIP} (${mb} MB, ${count} ไฟล์, รูปเพิ่มเติม ${extras.length} รูป)`);
+console.log(`สร้างแล้ว: ${ZIP} (${mb} MB, ${count} ไฟล์)`);

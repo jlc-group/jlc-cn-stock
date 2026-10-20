@@ -1,0 +1,3091 @@
+{
+ "_note": "สร้างจาก jlc-product-info ด้วย npm run sync-products — มีแค่ชื่อ แบรนด์ สารสกัด ขนาด และรูป (ไม่มีราคา แต้ม หรือโน้ตภายใน) อย่าแก้ไฟล์นี้เอง",
+ "generated_at": "2026-10-09T10:47:05.224Z",
+ "brands": [
+  {
+   "id": "julas-herb",
+   "name_th": "จุฬาเฮิร์บ",
+   "name_en": "Jula's Herb",
+   "accent_color": "#E8505B",
+   "sort": 1
+  },
+  {
+   "id": "jdent",
+   "name_th": "เจเด้นท์",
+   "name_en": "JDENT",
+   "accent_color": "#1BA39C",
+   "sort": 2
+  },
+  {
+   "id": "jarvit",
+   "name_th": "จาร์วิต",
+   "name_en": "Jarvit",
+   "accent_color": "#EF5B6B",
+   "sort": 3
+  },
+  {
+   "id": "beauterry",
+   "name_th": "บิวเทอร์รี่",
+   "name_en": "BEAUTERRY",
+   "accent_color": "#E0A4AF",
+   "sort": 4
+  },
+  {
+   "id": "jernis",
+   "name_th": "เจอร์นิส",
+   "name_en": "JERNIS",
+   "accent_color": "#9C7A5B",
+   "sort": 5
+  }
+ ],
+ "lists": {
+  "theme": [
+   {
+    "id": "watermelon",
+    "label_th": "แตงโม",
+    "label_en": "Watermelon",
+    "sort": 1
+   },
+   {
+    "id": "longan",
+    "label_th": "ลำไย",
+    "label_en": "Longan",
+    "sort": 2
+   },
+   {
+    "id": "carrot",
+    "label_th": "แครอท",
+    "label_en": "Carrot",
+    "sort": 3
+   },
+   {
+    "id": "red-orange",
+    "label_th": "ส้มแดง",
+    "label_en": "Red orange",
+    "sort": 4
+   },
+   {
+    "id": "marigold",
+    "label_th": "ดาวเรือง / คาเลนดูล่า",
+    "label_en": "Marigold / Calendula",
+    "sort": 5
+   },
+   {
+    "id": "moringa",
+    "label_th": "มะรุม",
+    "label_en": "Moringa",
+    "sort": 6
+   },
+   {
+    "id": "black-ginger",
+    "label_th": "ขิงดำ",
+    "label_en": "Black ginger",
+    "sort": 7
+   },
+   {
+    "id": "avocado",
+    "label_th": "อโวคาโด",
+    "label_en": "Avocado",
+    "sort": 8
+   },
+   {
+    "id": "melon",
+    "label_th": "เมลอน",
+    "label_en": "Melon",
+    "sort": 9
+   },
+   {
+    "id": "sunflower",
+    "label_th": "ทานตะวัน",
+    "label_en": "Sunflower",
+    "sort": 10
+   },
+   {
+    "id": "blue-rose",
+    "label_th": "กุหลาบน้ำเงิน",
+    "label_en": "Blue rose",
+    "sort": 11
+   },
+   {
+    "id": "water-lily",
+    "label_th": "บัว",
+    "label_en": "Water lily",
+    "sort": 12
+   },
+   {
+    "id": "cica",
+    "label_th": "ซิก้า / ใบบัวบก",
+    "label_en": "Cica",
+    "sort": 13
+   },
+   {
+    "id": "retinol",
+    "label_th": "เรตินอล",
+    "label_en": "Retinol",
+    "sort": 14
+   },
+   {
+    "id": "gold-24k",
+    "label_th": "ทองคำ 24K",
+    "label_en": "24K gold",
+    "sort": 15
+   },
+   {
+    "id": "mango",
+    "label_th": "มะม่วง",
+    "label_en": "Mango",
+    "sort": 16
+   },
+   {
+    "id": "gluta",
+    "label_th": "กลูต้า",
+    "label_en": "Gluta",
+    "sort": 17
+   },
+   {
+    "id": "mahad",
+    "label_th": "มะหาด",
+    "label_en": "Mahad",
+    "sort": 18
+   },
+   {
+    "id": "acerola",
+    "label_th": "อะเซโรล่าเชอร์รี่",
+    "label_en": "Acerola cherry",
+    "sort": 19
+   },
+   {
+    "id": "herbal",
+    "label_th": "สมุนไพร",
+    "label_en": "Herbal",
+    "sort": 20
+   },
+   {
+    "id": "floral-fruity",
+    "label_th": "กลิ่นดอกไม้ ผลไม้",
+    "label_en": "Floral fruity",
+    "sort": 21
+   }
+  ]
+ },
+ "products": [
+  {
+   "id": "jh-watermelon-dd-cream",
+   "brand_id": "julas-herb",
+   "name_th": "ดีดีครีม วอเตอร์เมลอน ซันสกรีน",
+   "name_en": "DD Cream Watermelon Sunscreen",
+   "nickname_th": "ดีดีครีมแตงโม",
+   "themes": [
+    "watermelon"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L3-40G-320.webp",
+    "lg": "media/julas-herb/L3-40G-960.webp"
+   },
+   "status": "active",
+   "sort": 1,
+   "skus": [
+    {
+     "sku": "JH703-8G",
+     "name_full_th": "จุฬาเฮิร์บ ดีดีครีมวอเตอร์เมลอน 8 กรัม",
+     "nickname_th": "ดีดีครีมวอเตอร์เมลอน",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "L3-8G",
+     "name_full_th": "จุฬาเฮิร์บ ดีดีครีม วอเตอร์เมลอน ซันสกรีน 8 กรัม",
+     "nickname_th": "ดีดีครีมแตงโม",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L3-8G-320.webp",
+      "lg": "media/julas-herb/L3-8G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JH703-40G",
+     "name_full_th": "จุฬาเฮิร์บ ดีดีครีมวอเตอร์เมลอน SPF50 PA+++ 40 กรัม",
+     "nickname_th": "ดีดีครีมแตงโม",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "L3-40G",
+     "name_full_th": "จุฬาเฮิร์บ ดีดี ครีม วอเตอร์เมลอน ซันสกรีน 40 กรัม",
+     "nickname_th": "ดีดีครีมแตงโม",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L3-40G-320.webp",
+      "lg": "media/julas-herb/L3-40G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L3-8Gx6",
+     "nickname_th": "ดีดีครีมแตงโม",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/L3-8Gx6-320.webp",
+      "lg": "media/julas-herb/L3-8Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-longan-melasma-pro-serum",
+   "brand_id": "julas-herb",
+   "name_th": "ลองแกน เมลาสม่า โปร เซรั่ม",
+   "name_en": "Longan Melasma Pro Serum",
+   "nickname_th": "เซรั่มลำไย",
+   "themes": [
+    "longan"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L4-40G-320.webp",
+    "lg": "media/julas-herb/L4-40G-960.webp"
+   },
+   "status": "active",
+   "sort": 2,
+   "skus": [
+    {
+     "sku": "L4-8G",
+     "name_full_th": "จุฬาเฮิร์บ ลองแกน เมลาสม่า โปร เซรั่ม 8 กรัม",
+     "nickname_th": "เซรั่มลำไย",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L4-8G-320.webp",
+      "lg": "media/julas-herb/L4-8G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L4-40G",
+     "name_full_th": "จุฬาเฮิร์บ ลองแกน เมลาสม่า โปร เซรั่ม 40 กรัม",
+     "nickname_th": "เซรั่มลำไย",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L4-40G-320.webp",
+      "lg": "media/julas-herb/L4-40G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L4-8Gx6",
+     "nickname_th": "เซรั่มลำไยใหม่",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/L4-8Gx6-320.webp",
+      "lg": "media/julas-herb/L4-8Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-longan-melasma-serum",
+   "brand_id": "julas-herb",
+   "name_th": "ลองแกน เมลาสม่า เซรั่ม",
+   "name_en": "Longan Melasma Serum",
+   "nickname_th": "เซรั่มลำไย (สูตรเดิม)",
+   "themes": [
+    "longan"
+   ],
+   "status": "active",
+   "sort": 3,
+   "skus": [
+    {
+     "sku": "JH704-8G",
+     "name_full_th": "จุฬาเฮิร์บ ลองแกน เมลาสม่า เซรั่ม 8 กรัม",
+     "nickname_th": "เซรั่มลำไย",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "JH704-40G",
+     "name_full_th": "จุฬาเฮิร์บ ลองแกน เมลาสม่า เซรั่ม 40 กรัม",
+     "nickname_th": "เซรั่มลำไย",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-carrot-aging-perfect-serum",
+   "brand_id": "julas-herb",
+   "name_th": "แครอท เอจจิ้ง เพอร์เฟค เซรั่ม",
+   "name_en": "Carrot Aging Perfect Serum",
+   "nickname_th": "เซรั่มแครอท",
+   "themes": [
+    "carrot"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L6-40G-320.webp",
+    "lg": "media/julas-herb/L6-40G-960.webp"
+   },
+   "status": "active",
+   "sort": 4,
+   "skus": [
+    {
+     "sku": "L6-8G",
+     "name_full_th": "จุฬาเฮิร์บ แครอท เอจจิ้ง เพอร์เฟค เซรั่ม 8 กรัม",
+     "nickname_th": "เซรั่มแครอท",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L6-8G-320.webp",
+      "lg": "media/julas-herb/L6-8G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L6-40G",
+     "name_full_th": "จุฬาเฮิร์บ แครอท เอจจิ้ง เพอร์เฟค เซรั่ม 40 กรัม",
+     "nickname_th": "เซรั่มแครอท",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L6-40G-320.webp",
+      "lg": "media/julas-herb/L6-40G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L6-8Gx6",
+     "nickname_th": "เซรั่มแครอทใหม่",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/L6-8Gx6-320.webp",
+      "lg": "media/julas-herb/L6-8Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-carrot-daily-serum",
+   "brand_id": "julas-herb",
+   "name_th": "แครอท เดลี่ เซรั่ม",
+   "name_en": "Carrot Daily Serum",
+   "nickname_th": "เซรั่มแครอท (สูตรเดิม)",
+   "themes": [
+    "carrot"
+   ],
+   "status": "active",
+   "sort": 5,
+   "skus": [
+    {
+     "sku": "JH706-8G",
+     "name_full_th": "จุฬาเฮิร์บ แครอท เดลี่ เซรั่ม 8 กรัม",
+     "nickname_th": "เซรั่มแครอท",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "JH706-40G",
+     "name_full_th": "จุฬาเฮิร์บ แครอท เดลี่ เซรั่ม 40 กรัม",
+     "nickname_th": "เซรั่มแครอท",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-red-orange-gluta-booster-serum",
+   "brand_id": "julas-herb",
+   "name_th": "เรด ออเร้นจ์ กลูต้า บูสเตอร์ เซรั่ม",
+   "name_en": "Red Orange Gluta Booster Serum",
+   "nickname_th": "โดสส้มแดงกลูต้าซีไฮยา",
+   "themes": [
+    "red-orange",
+    "gluta"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L7-30G-320.webp",
+    "lg": "media/julas-herb/L7-30G-960.webp"
+   },
+   "status": "active",
+   "sort": 6,
+   "skus": [
+    {
+     "sku": "L7-6G",
+     "name_full_th": "จุฬาเฮิร์บ เรด ออเร้นจ์ กลูต้า บูสเตอร์ เซรั่ม 6 กรัม",
+     "nickname_th": "โดสส้มแดงกลูต้าซีไฮยา",
+     "size_value": 6,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L7-6G-320.webp",
+      "lg": "media/julas-herb/L7-6G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L7-30G",
+     "name_full_th": "จุฬาเฮิร์บ เรด ออเร้นจ์ กลูต้า บูสเตอร์ เซรั่ม 30 กรัม",
+     "nickname_th": "โดสส้มแดงกลูต้าซีไฮยา",
+     "size_value": 30,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L7-30G-320.webp",
+      "lg": "media/julas-herb/L7-30G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L7-6Gx6",
+     "nickname_th": "โดสส้มแดงกลูต้าซีไฮยา",
+     "size_value": 6,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/L7-6Gx6-320.webp",
+      "lg": "media/julas-herb/L7-6Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-avocado-hydro-lock-cream",
+   "brand_id": "julas-herb",
+   "name_th": "อโวคาโด ไฮโดร ล็อก มอยส์เจอร์ ครีม",
+   "name_en": "Avocado Hydro Lock Moisture Cream",
+   "nickname_th": "มอยส์เจอร์อโวคาโด",
+   "themes": [
+    "avocado",
+    "cica"
+   ],
+   "image": {
+    "sm": "media/julas-herb/JHK4-48G-320.webp",
+    "lg": "media/julas-herb/JHK4-48G-960.webp"
+   },
+   "status": "active",
+   "sort": 7,
+   "skus": [
+    {
+     "sku": "JHK4-8G",
+     "name_full_th": "จุฬาเฮิร์บ อโวคาโด ไฮโดร ล็อก มอยส์เจอร์ ครีม 8 กรัม",
+     "nickname_th": "มอยส์เจอร์อโวคาโด",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "L9-8G",
+     "name_full_th": "จุฬาเฮิร์บ อโวคาโด ไฮโดร ล็อก มอยส์เจอร์ ครีม 8 กรัม",
+     "nickname_th": "มอยส์เจอร์อโวคาโด",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L9-8G-320.webp",
+      "lg": "media/julas-herb/L9-8G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JHK4-48G",
+     "name_full_th": "จุฬาเฮิร์บ อโวคาโด ไฮโดร ล็อก มอยส์เจอร์ ครีม 48 กรัม",
+     "nickname_th": "มอยส์เจอร์อโวคาโด",
+     "size_value": 48,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/JHK4-48G-320.webp",
+      "lg": "media/julas-herb/JHK4-48G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L9-8Gx6",
+     "nickname_th": "มอยส์เจอร์อโวคาโด",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/L9-8Gx6-320.webp",
+      "lg": "media/julas-herb/L9-8Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-watermelon-ee-cushion-matte",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์เมลอน อีอี คูชั่น แมตต์ SPF50 PA+++",
+   "name_en": "Watermelon EE Cushion Matte SPF50 PA+++",
+   "nickname_th": "อีอีคูชั่นแตงโม",
+   "themes": [
+    "watermelon"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L8A-30G-320.webp",
+    "lg": "media/julas-herb/L8A-30G-960.webp"
+   },
+   "status": "active",
+   "sort": 8,
+   "skus": [
+    {
+     "sku": "L8A-6G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน อีอี คูชั่น แมตต์ SPF50PA+++ (01 Light) 6 กรัม",
+     "nickname_th": "อีอีคูชั่นแตงโม 01 Light",
+     "variant_label": "01 Light",
+     "size_value": 6,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L8A-6G-320.webp",
+      "lg": "media/julas-herb/L8A-6G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JHQ1-30G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน อีอี คูชั่น แมตต์ SPF50PA+++ (01 Light) หลอด Q1 30 กรัม",
+     "nickname_th": "อีอีคูชั่นแตงโม 01 Light",
+     "variant_label": "01 Light",
+     "size_value": 30,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "L8A-30G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน อีอี คูชั่น แมตต์ SPF50PA+++ (01 Light) หลอด L8A 30 กรัม",
+     "nickname_th": "อีอีคูชั่นแตงโม 01 Light",
+     "variant_label": "01 Light",
+     "size_value": 30,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L8A-30G-320.webp",
+      "lg": "media/julas-herb/L8A-30G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L8A-6Gx6",
+     "nickname_th": "อีอีคูชั่นแตงโม 01 Light",
+     "variant_label": "01 Light",
+     "size_value": 6,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/L8A-6Gx6-320.webp",
+      "lg": "media/julas-herb/L8A-6Gx6-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L8B-6G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน อีอี คูชั่น แมตต์ SPF50PA+++ (02 Natural) 6 กรัม",
+     "nickname_th": "อีอีคูชั่นแตงโม 02 Natural",
+     "variant_label": "02 Natural",
+     "size_value": 6,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L8B-6G-320.webp",
+      "lg": "media/julas-herb/L8B-6G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JHQ2-30G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน อีอี คูชั่น แมตต์ SPF50PA+++ (02 Natural) หลอด Q2 30 กรัม",
+     "nickname_th": "อีอีคูชั่นแตงโม 02 Natural",
+     "variant_label": "02 Natural",
+     "size_value": 30,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "L8B-30G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน อีอี คูชั่น แมตต์ SPF50PA+++ (02 Natural) หลอด L8B 30 กรัม",
+     "nickname_th": "อีอีคูชั่นแตงโม 02 Natural",
+     "variant_label": "02 Natural",
+     "size_value": 30,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L8B-30G-320.webp",
+      "lg": "media/julas-herb/L8B-30G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L8B-6Gx6",
+     "nickname_th": "อีอีคูชั่นแตงโม 02 Natural",
+     "variant_label": "02 Natural",
+     "size_value": 6,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/L8B-6Gx6-320.webp",
+      "lg": "media/julas-herb/L8B-6Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-watermelon-ee-cushion",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์เมลอน อีอี คูชั่น",
+   "name_en": "Watermelon EE Cushion",
+   "nickname_th": "อีอีคูชั่นแตงโม (สูตรเดิม)",
+   "themes": [
+    "watermelon"
+   ],
+   "status": "active",
+   "sort": 9,
+   "skus": [
+    {
+     "sku": "JH708-6G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน อีอี คูชั่น 6 กรัม",
+     "nickname_th": "อีอีคูชั่นแตงโม",
+     "size_value": 6,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-melon-milk-uv-essence",
+   "brand_id": "julas-herb",
+   "name_th": "เมลอน มิลก์ ยูวี เอสเซนส์ SPF50+ PA++++",
+   "name_en": "Melon Milk UV Essence SPF50+ PA++++",
+   "nickname_th": "กันแดดน้ำนมเมลอน",
+   "themes": [
+    "melon"
+   ],
+   "image": {
+    "sm": "media/julas-herb/C3-30G-320.webp",
+    "lg": "media/julas-herb/C3-30G-960.webp"
+   },
+   "status": "active",
+   "sort": 10,
+   "skus": [
+    {
+     "sku": "C3-7G",
+     "name_full_th": "จุฬาเฮิร์บ เมลอน มิลก์ ยูวี เอสเซนส์ SPF50+ PA++++ 7 กรัม",
+     "nickname_th": "กันแดดน้ำนมเมลอน",
+     "size_value": 7,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/C3-7G-320.webp",
+      "lg": "media/julas-herb/C3-7G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JHK6-7G",
+     "name_full_th": "จุฬาเฮิร์บ เมลอน มิลก์ ยูวี เอสเซนส์ 7 กรัม",
+     "nickname_th": "กันแดดน้ำนมเมลอน",
+     "size_value": 7,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "C3-30G",
+     "name_full_th": "จุฬาเฮิร์บ เมลอน มิลก์ ยูวี เอสเซนส์ SPF50+PA++++ (หลอด) 30 กรัม",
+     "nickname_th": "กันแดดน้ำนมเมลอน",
+     "size_value": 30,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/C3-30G-320.webp",
+      "lg": "media/julas-herb/C3-30G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "C3-7Gx6",
+     "nickname_th": "กันแดดน้ำนมเมลอน",
+     "size_value": 7,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/C3-7Gx6-320.webp",
+      "lg": "media/julas-herb/C3-7Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-watermelon-3d-aura-sun-guard",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์เมลอน ทรีดี ออร่า ซัน การ์ด SPF50+ PA++++",
+   "name_en": "Watermelon 3D Aura Sun Guard SPF50+ PA++++",
+   "nickname_th": "กันแดดแตงโม 3D ออร่า",
+   "themes": [
+    "watermelon"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L10-30G-320.webp",
+    "lg": "media/julas-herb/L10-30G-960.webp"
+   },
+   "status": "active",
+   "sort": 11,
+   "skus": [
+    {
+     "sku": "L10-7G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน ทรีดี ออร่า ซัน การ์ด SPF50+PA++++ 7 กรัม",
+     "nickname_th": "กันแดดแตงโม 3D ออร่า",
+     "size_value": 7,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L10-7G-320.webp",
+      "lg": "media/julas-herb/L10-7G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L10-30G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน ทรีดี ออร่า ซัน การ์ด SPF50+PA++++ 30 กรัม",
+     "nickname_th": "กันแดดแตงโม 3D ออร่า",
+     "size_value": 30,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L10-30G-320.webp",
+      "lg": "media/julas-herb/L10-30G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L10-7Gx6",
+     "nickname_th": "กันแดดแตงโม 3D ออร่า",
+     "size_value": 7,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/L10-7Gx6-320.webp",
+      "lg": "media/julas-herb/L10-7Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-sunflower-soft-blur-uv-gel",
+   "brand_id": "julas-herb",
+   "name_th": "ซันฟลาวเวอร์ ซอฟท์-เบลอ ยูวี เจล SPF50+ PA++++",
+   "name_en": "Sunflower Soft-Blur UV Gel SPF50+ PA++++",
+   "nickname_th": "กันแดดทานตะวัน",
+   "themes": [
+    "sunflower"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L20-30G-320.webp",
+    "lg": "media/julas-herb/L20-30G-960.webp"
+   },
+   "status": "active",
+   "sort": 12,
+   "skus": [
+    {
+     "sku": "L20-7G",
+     "name_full_th": "จุฬาเฮิร์บ ซันฟลาวเวอร์ ซอฟท์-เบลอ ยูวี เจล SPF50+ PA++++ 7 กรัม",
+     "nickname_th": "กันแดดทานตะวัน",
+     "size_value": 7,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L20-7G-320.webp",
+      "lg": "media/julas-herb/L20-7G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L20-30G",
+     "name_full_th": "จุฬาเฮิร์บ ซันฟลาวเวอร์ ซอฟท์-เบลอ ยูวี เจล SPF50+ PA++++ 30 กรัม",
+     "nickname_th": "กันแดดทานตะวัน",
+     "size_value": 30,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L20-30G-320.webp",
+      "lg": "media/julas-herb/L20-30G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L20-7Gx6",
+     "nickname_th": "กันแดดทานตะวัน",
+     "size_value": 7,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/L20-7Gx6-320.webp",
+      "lg": "media/julas-herb/L20-7Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-sunflower-body-sunscreen",
+   "brand_id": "julas-herb",
+   "name_th": "ซันฟลาวเวอร์ บอดี้ ซันสกรีน SPF50+ PA++++",
+   "name_en": "Sunflower Body Sunscreen SPF50+ PA++++",
+   "nickname_th": "กันแดดทานตะวันทาตัว",
+   "themes": [
+    "sunflower"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L21-100G-320.webp",
+    "lg": "media/julas-herb/L21-100G-960.webp"
+   },
+   "status": "active",
+   "sort": 13,
+   "skus": [
+    {
+     "sku": "L21-100G",
+     "name_full_th": "จุฬาเฮิร์บ ซันฟลาวเวอร์ บอดี้ ซันสกรีน SPF50+ PA++++ 100 กรัม",
+     "nickname_th": "กันแดดทานตะวันทาตัว",
+     "size_value": 100,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L21-100G-320.webp",
+      "lg": "media/julas-herb/L21-100G-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-watermelon-bb-body-lotion-plus",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์เมลอน บีบี บอดี้โลชั่น พลัส SPF30 PA+++",
+   "name_en": "Watermelon BB Body Lotion Plus SPF30 PA+++",
+   "nickname_th": "บีบีโลชั่นแตงโม (ตัวขาว)",
+   "themes": [
+    "watermelon"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L1-150G-320.webp",
+    "lg": "media/julas-herb/L1-150G-960.webp"
+   },
+   "status": "active",
+   "sort": 14,
+   "skus": [
+    {
+     "sku": "L1-150G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน บีบี บอดี้โลชั่น พลัส SPF30PA+++ 150 กรัม",
+     "nickname_th": "บีบีโลชั่นแตงโม",
+     "size_value": 150,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L1-150G-320.webp",
+      "lg": "media/julas-herb/L1-150G-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-watermelon-bb-body-lotion",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์เมลอน บีบี บอดี้โลชั่น",
+   "name_en": "Watermelon BB Body Lotion",
+   "nickname_th": "บีบีโลชั่นแตงโม",
+   "themes": [
+    "watermelon"
+   ],
+   "image": {
+    "sm": "media/julas-herb/JHA1-40G-320.webp",
+    "lg": "media/julas-herb/JHA1-40G-960.webp"
+   },
+   "status": "active",
+   "sort": 15,
+   "skus": [
+    {
+     "sku": "JHA1-40G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน บีบี บอดี้โลชั่น 40 กรัม",
+     "nickname_th": "บีบีโลชั่นแตงโม",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/JHA1-40G-320.webp",
+      "lg": "media/julas-herb/JHA1-40G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JHA1-40Gx6",
+     "nickname_th": "บีบีโลชั่นแตงโม",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/JHA1-40Gx6-320.webp",
+      "lg": "media/julas-herb/JHA1-40Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-watermelon-hydro-white-essence",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์เมลอน ไฮโดร ไวท์ เอสเซนส์",
+   "name_en": "Watermelon Hydro White Essence",
+   "nickname_th": "น้ำตบแตงโมคอลลาเจน",
+   "themes": [
+    "watermelon"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L5-90G-320.webp",
+    "lg": "media/julas-herb/L5-90G-960.webp"
+   },
+   "status": "active",
+   "sort": 16,
+   "skus": [
+    {
+     "sku": "JHK5-15G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน ไฮโดร ไวท์ เอสเซนส์ 15 กรัม",
+     "nickname_th": "น้ำตบแตงโมคอลลาเจน",
+     "size_value": 15,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "L5-15G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน ไฮโดร ไวท์ เอสเซนส์ 15 กรัม",
+     "nickname_th": "น้ำตบแตงโมคอลลาเจน",
+     "size_value": 15,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L5-15G-320.webp",
+      "lg": "media/julas-herb/L5-15G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L5-90G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน ไฮโดร ไวท์ เอสเซนส์ 90 กรัม",
+     "nickname_th": "น้ำตบแตงโมคอลลาเจน",
+     "size_value": 90,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L5-90G-320.webp",
+      "lg": "media/julas-herb/L5-90G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JHL5-15Gx6",
+     "nickname_th": "น้ำตบแตงโมคอลลาเจน",
+     "size_value": 15,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/JHL5-15Gx6-320.webp",
+      "lg": "media/julas-herb/JHL5-15Gx6-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L5A-90G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน ไฮโดร ไวท์ เอสเซนส์ 90 กรัม (ขวดสเปรย์)",
+     "nickname_th": "น้ำตบแตงโมคอลลาเจน",
+     "variant_label": "ขวดสเปรย์",
+     "size_value": 90,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L5A-90G-320.webp",
+      "lg": "media/julas-herb/L5A-90G-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-water-lily-moisture-gel",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์ ลิลลี่ อัลตร้า บูสต์ มอยส์เจอร์ เจล",
+   "name_en": "Water Lily Ultra Boost Moisture Gel",
+   "nickname_th": "มอยส์เจลฉ่ำบัว",
+   "themes": [
+    "water-lily"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L19-48G-320.webp",
+    "lg": "media/julas-herb/L19-48G-960.webp"
+   },
+   "status": "active",
+   "sort": 17,
+   "skus": [
+    {
+     "sku": "L19-8G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์ ลิลลี่ อัลตร้า บูสต์ มอยส์เจอร์ เจล 8 กรัม",
+     "nickname_th": "มอยส์เจลฉ่ำบัว",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L19-8G-320.webp",
+      "lg": "media/julas-herb/L19-8G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L19-48G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์ ลิลลี่ อัลตร้า บูสต์ มอยส์เจอร์ เจล 48 กรัม",
+     "nickname_th": "มอยส์เจลฉ่ำบัว",
+     "size_value": 48,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L19-48G-320.webp",
+      "lg": "media/julas-herb/L19-48G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L19-8Gx6",
+     "nickname_th": "มอยส์เจลฉ่ำบัว",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/L19-8Gx6-320.webp",
+      "lg": "media/julas-herb/L19-8Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-watermelon-magic-lip-tint",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์เมลอน เมจิค ลิป ทินท์",
+   "name_en": "Watermelon Magic Lip Tint",
+   "nickname_th": "ลิปทินท์แตงโม",
+   "themes": [
+    "watermelon"
+   ],
+   "image": {
+    "sm": "media/julas-herb/JHT1-2G-320.webp",
+    "lg": "media/julas-herb/JHT1-2G-960.webp"
+   },
+   "status": "active",
+   "sort": 18,
+   "skus": [
+    {
+     "sku": "JHT1-2G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน เมจิค ลิป ทินท์ 01 โกลเด้นควีน 2 กรัม",
+     "nickname_th": "ลิปทินท์แตงโม 01 สีแดง",
+     "variant_label": "01 Golden Queen (แดง)",
+     "size_value": 2,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/JHT1-2G-320.webp",
+      "lg": "media/julas-herb/JHT1-2G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JHT1-2Gx6",
+     "nickname_th": "ลิปทินท์แตงโม 01 สีแดง",
+     "variant_label": "01 Golden Queen (แดง)",
+     "size_value": 2,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/JHT1-2Gx6-320.webp",
+      "lg": "media/julas-herb/JHT1-2Gx6-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JHT2-2G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน เมจิค ลิป ทินท์ 02 ชูการ์เบบี้ 2 กรัม",
+     "nickname_th": "ลิปทินท์แตงโม 02 สีชมพู",
+     "variant_label": "02 Sugar Baby (ชมพู)",
+     "size_value": 2,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/JHT2-2G-320.webp",
+      "lg": "media/julas-herb/JHT2-2G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JHT2-2Gx6",
+     "nickname_th": "ลิปทินท์แตงโม 02 สีชมพู",
+     "variant_label": "02 Sugar Baby (ชมพู)",
+     "size_value": 2,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/JHT2-2Gx6-320.webp",
+      "lg": "media/julas-herb/JHT2-2Gx6-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JHT3-2G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน เมจิค ลิป ทินท์ 03 ซันออเรนจ์ 2 กรัม",
+     "nickname_th": "ลิปทินท์แตงโม 03 สีส้ม",
+     "variant_label": "03 Sun Orange (ส้ม)",
+     "size_value": 2,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/JHT3-2G-320.webp",
+      "lg": "media/julas-herb/JHT3-2G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JHT3-2Gx6",
+     "nickname_th": "ลิปทินท์แตงโม 03 สีส้ม",
+     "variant_label": "03 Sun Orange (ส้ม)",
+     "size_value": 2,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/JHT3-2Gx6-320.webp",
+      "lg": "media/julas-herb/JHT3-2Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-watermelon-tattoo-lip-serum",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์เมลอน แทททู ลิป เซรั่ม",
+   "name_en": "Watermelon Tattoo Lip Serum",
+   "nickname_th": "ลิปแทททูแตงโม",
+   "themes": [
+    "watermelon"
+   ],
+   "image": {
+    "sm": "media/julas-herb/T5A-2.5G-320.webp",
+    "lg": "media/julas-herb/T5A-2.5G-960.webp"
+   },
+   "status": "active",
+   "sort": 19,
+   "skus": [
+    {
+     "sku": "T5A-2G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน แทททู ลิป เซรั่ม 01 ออลสวีท 2 กรัม (สีชมพู)",
+     "nickname_th": "แทททูลิปเซรั่ม 01 All Sweet",
+     "variant_label": "01 All Sweet (ชมพู)",
+     "size_value": 2,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/T5A-2G-320.webp",
+      "lg": "media/julas-herb/T5A-2G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "T5A-2.5G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน แทททู ลิป เซรั่ม 01 ออลสวีท 2.5 กรัม (สีชมพู)",
+     "nickname_th": "แทททูลิปเซรั่ม 01 All Sweet",
+     "variant_label": "01 All Sweet (ชมพู)",
+     "size_value": 2.5,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/T5A-2.5G-320.webp",
+      "lg": "media/julas-herb/T5A-2.5G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "T5A-2Gx6",
+     "nickname_th": "ลิป แทททู ชมพู 01 All Sweet",
+     "variant_label": "01 All Sweet (ชมพู)",
+     "size_value": 2,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/T5A-2Gx6-320.webp",
+      "lg": "media/julas-herb/T5A-2Gx6-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "T5B-2G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน แทททู ลิป เซรั่ม 02 เบอร์กันดี 2 กรัม (สีแดง)",
+     "nickname_th": "แทททูลิปเซรั่ม 02 Burgundy",
+     "variant_label": "02 Burgundy (แดง)",
+     "size_value": 2,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/T5B-2G-320.webp",
+      "lg": "media/julas-herb/T5B-2G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "T5B-2.5G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน แทททู ลิป เซรั่ม 02 เบอร์กันดี 2.5 กรัม (สีแดง)",
+     "nickname_th": "แทททูลิปเซรั่ม 02 Burgundy",
+     "variant_label": "02 Burgundy (แดง)",
+     "size_value": 2.5,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/T5B-2.5G-320.webp",
+      "lg": "media/julas-herb/T5B-2.5G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "T5B-2Gx6",
+     "nickname_th": "ลิปแทททู แดง 02 Burgundy",
+     "variant_label": "02 Burgundy (แดง)",
+     "size_value": 2,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/T5B-2Gx6-320.webp",
+      "lg": "media/julas-herb/T5B-2Gx6-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "T5C-2G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน แทททู ลิป เซรั่ม 03 ลิตเติ้ล ดาร์ลิ้ง 2 กรัม (สีส้ม)",
+     "nickname_th": "แทททูลิปเซรั่ม 03 Little Darling",
+     "variant_label": "03 Little Darling (ส้ม)",
+     "size_value": 2,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/T5C-2G-320.webp",
+      "lg": "media/julas-herb/T5C-2G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "T5C-2.5G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน แทททู ลิป เซรั่ม 03 ลิตเติ้ล ดาร์ลิ้ง 2.5 กรัม (สีส้ม)",
+     "nickname_th": "แทททูลิปเซรั่ม 03 Little Darling",
+     "variant_label": "03 Little Darling (ส้ม)",
+     "size_value": 2.5,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/T5C-2.5G-320.webp",
+      "lg": "media/julas-herb/T5C-2.5G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "T5C-2Gx6",
+     "nickname_th": "ลิป แทททู ส้ม 03 Little Darling",
+     "variant_label": "03 Little Darling (ส้ม)",
+     "size_value": 2,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/T5C-2Gx6-320.webp",
+      "lg": "media/julas-herb/T5C-2Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-watermelon-aura-bomb-scrub",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์เมลอน ออร่า บอมบ์ สครับ",
+   "name_en": "Watermelon Aura Bomb Scrub",
+   "nickname_th": "สครับแตงโม",
+   "themes": [
+    "watermelon"
+   ],
+   "image": {
+    "sm": "media/julas-herb/JHA2-40G-320.webp",
+    "lg": "media/julas-herb/JHA2-40G-960.webp"
+   },
+   "status": "active",
+   "sort": 20,
+   "skus": [
+    {
+     "sku": "JHA2-40G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน ออร่า บอมบ์ สครับ 40 กรัม",
+     "nickname_th": "สครับแตงโม",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/JHA2-40G-320.webp",
+      "lg": "media/julas-herb/JHA2-40G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JHA2-40Gx6",
+     "nickname_th": "สครับแตงโม",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/JHA2-40Gx6-320.webp",
+      "lg": "media/julas-herb/JHA2-40Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-watermelon-spa-salt-body-scrub",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์เมลอน สปา ซอลท์ บอดี้ สครับ",
+   "name_en": "Watermelon Spa Salt Body Scrub",
+   "nickname_th": "สครับเกลือแตงโม",
+   "themes": [
+    "watermelon"
+   ],
+   "status": "active",
+   "sort": 21,
+   "skus": [
+    {
+     "sku": "JHP2-200G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน สปา ซอลท์ บอดี้ สครับ 200 มล.",
+     "nickname_th": "สครับเกลือแตงโม",
+     "size_value": 200,
+     "size_unit": "ml",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-marigold-acne-gel",
+   "brand_id": "julas-herb",
+   "name_th": "แมริโกลด์ แอคเน่ เจล",
+   "name_en": "Marigold Acne Gel",
+   "nickname_th": "เจลดาวเรือง (สูตรเดิม)",
+   "themes": [
+    "marigold"
+   ],
+   "status": "active",
+   "sort": 22,
+   "skus": [
+    {
+     "sku": "JH701-8G",
+     "name_full_th": "จุฬาเฮิร์บ แมริโกลด์ แอคเน่ เจล 8 กรัม",
+     "nickname_th": "แมริโกลด์ แอคเน่ เจล",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "JH701-40G",
+     "name_full_th": "จุฬาเฮิร์บ แมริโกลด์แอคเน่เจล 40 กรัม",
+     "nickname_th": "เจลดาวเรือง",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-marigold-intensive-acne-gel",
+   "brand_id": "julas-herb",
+   "name_th": "แมริโกลด์ อินเทนซีฟ แอคเน่ เจล",
+   "name_en": "Marigold Intensive Acne Gel",
+   "nickname_th": "เจลดาวเรือง",
+   "themes": [
+    "marigold"
+   ],
+   "status": "active",
+   "sort": 23,
+   "skus": [
+    {
+     "sku": "JHK1-8G",
+     "name_full_th": "จุฬาเฮิร์บ แมริโกลด์อินเทนซีฟแอคเน่เจล 8 กรัม",
+     "nickname_th": "เจลดาวเรือง",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "JHK1-40G",
+     "name_full_th": "จุฬาเฮิร์บ แมริโกลด์อินเทนซีฟแอคเน่เจล 40 กรัม",
+     "nickname_th": "เจลดาวเรือง",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-calendula-anti-acne-spot-gel",
+   "brand_id": "julas-herb",
+   "name_th": "คาเลนดูล่า แอนติ-แอคเน่ สปอต เจล",
+   "name_en": "Calendula Anti-Acne Spot Gel",
+   "nickname_th": "เจลแต้มสิวดาวเรือง คาเลนดูล่า",
+   "themes": [
+    "marigold"
+   ],
+   "image": {
+    "sm": "media/julas-herb/C1-15G-320.webp",
+    "lg": "media/julas-herb/C1-15G-960.webp"
+   },
+   "status": "active",
+   "sort": 24,
+   "skus": [
+    {
+     "sku": "C1-6G",
+     "name_full_th": "จุฬาเฮิร์บ คาเลนดูล่า แอนติ-แอคเน่ สปอต เจล 6 กรัม",
+     "nickname_th": "เจลดาวเรือง คาเลนดูล่า",
+     "size_value": 6,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/C1-6G-320.webp",
+      "lg": "media/julas-herb/C1-6G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "C1-15G",
+     "name_full_th": "จุฬาเฮิร์บ คาเลนดูล่า แอนติ-แอคเน่ สปอต เจล 15 กรัม",
+     "nickname_th": "เจลดาวเรือง คาเลนดูล่า",
+     "size_value": 15,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/C1-15G-320.webp",
+      "lg": "media/julas-herb/C1-15G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "C1-6Gx6",
+     "nickname_th": "เจลแต้มสิวดาวเรือง คาเลนดูล่า",
+     "size_value": 6,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/C1-6Gx6-320.webp",
+      "lg": "media/julas-herb/C1-6Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-moringa-repair-gel",
+   "brand_id": "julas-herb",
+   "name_th": "มอรินก้า รีแพร์ เจล",
+   "name_en": "Moringa Repair Gel",
+   "nickname_th": "เจลมะรุม (สูตรเดิม)",
+   "themes": [
+    "moringa"
+   ],
+   "status": "active",
+   "sort": 25,
+   "skus": [
+    {
+     "sku": "JH702-8G",
+     "name_full_th": "จุฬาเฮิร์บ มอรินก้ารีแพร์เจล 8 กรัม",
+     "nickname_th": "มอรินก้ารีแพร์เจล",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "JH702-40G",
+     "name_full_th": "จุฬาเฮิร์บ มอรินก้ารีแพร์เจล 40 กรัม",
+     "nickname_th": "เจลมะรุม",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-moringa-advance-repair-gel",
+   "brand_id": "julas-herb",
+   "name_th": "มอรินก้า แอดวานซ์ รีแพร์ เจล",
+   "name_en": "Moringa Advance Repair Gel",
+   "nickname_th": "เจลมะรุม",
+   "themes": [
+    "moringa"
+   ],
+   "image": {
+    "sm": "media/julas-herb/JHK2-40G-320.webp",
+    "lg": "media/julas-herb/JHK2-40G-960.webp"
+   },
+   "status": "active",
+   "sort": 26,
+   "skus": [
+    {
+     "sku": "JHK2-8G",
+     "name_full_th": "จุฬาเฮิร์บ มอรินก้าแอดวานซ์รีแพร์เจล 8 กรัม",
+     "nickname_th": "เจลมะรุม",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "JHK2-40G",
+     "name_full_th": "จุฬาเฮิร์บ มอรินก้าแอดวานซ์รีแพร์เจล 40 กรัม",
+     "nickname_th": "เจลมะรุม",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/JHK2-40G-320.webp",
+      "lg": "media/julas-herb/JHK2-40G-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-moringa-complete-repair-serum",
+   "brand_id": "julas-herb",
+   "name_th": "มอรินก้า คอมพลีต รีแพร์ เซรั่ม",
+   "name_en": "Moringa Complete Repair Serum",
+   "nickname_th": "เซรั่มมะรุมเปบไทด์",
+   "themes": [
+    "moringa",
+    "cica"
+   ],
+   "image": {
+    "sm": "media/julas-herb/C2-35G-320.webp",
+    "lg": "media/julas-herb/C2-35G-960.webp"
+   },
+   "status": "active",
+   "sort": 27,
+   "skus": [
+    {
+     "sku": "C2-8G",
+     "name_full_th": "จุฬาเฮิร์บ มอรินก้า คอมพลีต รีแพร์ เซรั่ม 8 กรัม",
+     "nickname_th": "เซรั่มมะรุมเปบไทด์",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/C2-8G-320.webp",
+      "lg": "media/julas-herb/C2-8G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "C2-35G",
+     "name_full_th": "จุฬาเฮิร์บ มอรินก้า คอมพลีต รีแพร์ เซรั่ม 35 กรัม",
+     "nickname_th": "เซรั่มมะรุมเปบไทด์",
+     "size_value": 35,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/C2-35G-320.webp",
+      "lg": "media/julas-herb/C2-35G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "C2-8Gx6",
+     "nickname_th": "เซรั่มมะรุมเปบไทด์",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/C2-8Gx6-320.webp",
+      "lg": "media/julas-herb/C2-8Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-black-ginger-men-serum",
+   "brand_id": "julas-herb",
+   "name_th": "แบล็ค จิงเจอร์ ออล อิน วัน เมน เซรั่ม",
+   "name_en": "Black Ginger All in One Men Serum",
+   "nickname_th": "เซรั่มขิงดำ (สูตรเดิม)",
+   "themes": [
+    "black-ginger"
+   ],
+   "status": "active",
+   "sort": 28,
+   "skus": [
+    {
+     "sku": "JH707-8G",
+     "name_full_th": "จุฬาเฮิร์บ แบล็ค จิงเจอร์ ออล อิน วัน เมน เซรั่ม 8 กรัม",
+     "nickname_th": "เซรั่มขิงดำ",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "JH707-40G",
+     "name_full_th": "จุฬาเฮิร์บ แบล็ค จิงเจอร์ ออล อิน วัน เมน เซรั่ม 40 กรัม",
+     "nickname_th": "เซรั่มขิงดำ",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-black-ginger-poreless-serum",
+   "brand_id": "julas-herb",
+   "name_th": "แบล็ก จิงเจอร์ พอร์เลส แอนด์ ออยล์ เคลียร์ เซรั่ม",
+   "name_en": "Black Ginger Poreless & Oil Clear Serum",
+   "nickname_th": "เซรั่มขิงดำซิงก์",
+   "themes": [
+    "black-ginger"
+   ],
+   "image": {
+    "sm": "media/julas-herb/C4-35G-320.webp",
+    "lg": "media/julas-herb/C4-35G-960.webp"
+   },
+   "status": "active",
+   "sort": 29,
+   "skus": [
+    {
+     "sku": "C4-8G",
+     "name_full_th": "จุฬาเฮิร์บ แบล็ก จิงเจอร์ พอร์เลส & ออยล์ เคลียร์ เซรั่ม 8 กรัม",
+     "nickname_th": "เซรั่มขิงดำซิงก์",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/C4-8G-320.webp",
+      "lg": "media/julas-herb/C4-8G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "C4-35G",
+     "name_full_th": "จุฬาเฮิร์บ แบล็ก จิงเจอร์ พอร์เลส & ออยล์ เคลียร์ เซรั่ม 35 กรัม",
+     "nickname_th": "เซรั่มขิงดำซิงก์",
+     "size_value": 35,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/C4-35G-320.webp",
+      "lg": "media/julas-herb/C4-35G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "C4-8Gx6",
+     "nickname_th": "เซรั่มขิงดำซิงก์",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/C4-8Gx6-320.webp",
+      "lg": "media/julas-herb/C4-8Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-mango-yogurt-booster-serum",
+   "brand_id": "julas-herb",
+   "name_th": "แมงโก้ โยเกิร์ต บูสเตอร์ เซรั่ม",
+   "name_en": "Mango Yogurt Booster Serum",
+   "nickname_th": "เซรั่มมะม่วง",
+   "themes": [
+    "mango"
+   ],
+   "status": "active",
+   "sort": 30,
+   "skus": [
+    {
+     "sku": "JH705-8G",
+     "name_full_th": "จุฬาเฮิร์บ โยเกิร์ต บูสเตอร์ เซรั่ม 8 กรัม",
+     "nickname_th": "เซรั่มมะม่วง",
+     "size_value": 8,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "JH705-40G",
+     "name_full_th": "จุฬาเฮิร์บ แมงโก้ โยเกิร์ต บูสเตอร์ เซรั่ม 40 กรัม",
+     "nickname_th": "เซรั่มมะม่วง",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-gluta-hya-booster-serum",
+   "brand_id": "julas-herb",
+   "name_th": "กลูต้า-ไฮยา บูสเตอร์ เซรั่ม",
+   "name_en": "Gluta-Hya Booster Serum",
+   "nickname_th": "กลูต้าไฮยา บูสเตอร์เซรั่ม",
+   "themes": [
+    "gluta"
+   ],
+   "image": {
+    "sm": "media/julas-herb/JHK3-30G-320.webp",
+    "lg": "media/julas-herb/JHK3-30G-960.webp"
+   },
+   "status": "active",
+   "sort": 31,
+   "skus": [
+    {
+     "sku": "JHK3-6G",
+     "name_full_th": "จุฬาเฮิร์บ กลูต้า-ไฮยา บูสเตอร์ เซรั่ม 6 กรัม",
+     "nickname_th": "กลูต้าไฮยา บูสเตอร์เซรั่ม",
+     "size_value": 6,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "JHK3-30G",
+     "name_full_th": "จุฬาเฮิร์บ กลูต้า-ไฮยา บูสเตอร์ เซรั่ม 30 กรัม (ขวด)",
+     "nickname_th": "กลูต้าไฮยา บูสเตอร์เซรั่ม",
+     "size_value": 30,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/JHK3-30G-320.webp",
+      "lg": "media/julas-herb/JHK3-30G-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-red-orange-body-lotion",
+   "brand_id": "julas-herb",
+   "name_th": "เรด ออเร้นจ์ ออร่า ไบรท์ บอดี้ โลชั่น",
+   "name_en": "Red Orange Aura Bright Body Lotion",
+   "nickname_th": "โลชั่นโดสส้มแดง",
+   "themes": [
+    "red-orange"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L11-400G-320.webp",
+    "lg": "media/julas-herb/L11-400G-960.webp"
+   },
+   "status": "active",
+   "sort": 32,
+   "skus": [
+    {
+     "sku": "L11-40G",
+     "name_full_th": "จุฬาเฮิร์บ เรด ออเร้นจ์ ออร่า ไบรท์ บอดี้ โลชั่น 40 กรัม",
+     "nickname_th": "โลชั่นโดสส้มแดง",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L11-40G-320.webp",
+      "lg": "media/julas-herb/L11-40G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L11-200G",
+     "name_full_th": "จุฬาเฮิร์บ เรด ออเร้นจ์ ออร่า ไบรท์ บอดี้ โลชั่น หลอด 200 กรัม",
+     "nickname_th": "โลชั่นโดสส้มแดง",
+     "size_value": 200,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    },
+    {
+     "sku": "L11-400G",
+     "name_full_th": "จุฬาเฮิร์บ เรด ออเร้นจ์ ออร่า ไบรท์ บอดี้ โลชั่น 400 กรัม",
+     "nickname_th": "โลชั่นโดสส้มแดง",
+     "size_value": 400,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L11-400G-320.webp",
+      "lg": "media/julas-herb/L11-400G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L11-40Gx6",
+     "nickname_th": "โลชั่นออร่าไบรท์โดสส้มแดง",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/L11-40Gx6-320.webp",
+      "lg": "media/julas-herb/L11-40Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-red-orange-shower-gel",
+   "brand_id": "julas-herb",
+   "name_th": "เรด ออเร้นจ์ ออร่า โกลว์ ชาวเวอร์ เจล",
+   "name_en": "Red Orange Aura Glow Shower Gel",
+   "nickname_th": "เจลอาบน้ำส้มแดง",
+   "themes": [
+    "red-orange"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L12-400G-320.webp",
+    "lg": "media/julas-herb/L12-400G-960.webp"
+   },
+   "status": "active",
+   "sort": 33,
+   "skus": [
+    {
+     "sku": "L12-400G",
+     "name_full_th": "จุฬาเฮิร์บ เรด ออเร้นจ์ ออร่า โกลว์ ชาวเวอร์ เจล 400 กรัม",
+     "nickname_th": "สบู่อาบน้ำส้มแดง",
+     "size_value": 400,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L12-400G-320.webp",
+      "lg": "media/julas-herb/L12-400G-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-blue-rose-underarm-cream",
+   "brand_id": "julas-herb",
+   "name_th": "บลูโรส ไบร์ทเทนนิ่ง อันเดอร์อาร์ม ครีม",
+   "name_en": "Blue Rose Brightening Underarm Cream",
+   "nickname_th": "ครีมกุหลาบน้ำเงิน",
+   "themes": [
+    "blue-rose"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L13-40G-320.webp",
+    "lg": "media/julas-herb/L13-40G-960.webp"
+   },
+   "status": "active",
+   "sort": 34,
+   "skus": [
+    {
+     "sku": "L13-10G",
+     "name_full_th": "จุฬาเฮิร์บ บลูโรส ไบร์ทเทนนิ่ง อันเดอร์อาร์มครีม 10 กรัม",
+     "nickname_th": "ครีมกุหลาบน้ำเงิน",
+     "size_value": 10,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L13-10G-320.webp",
+      "lg": "media/julas-herb/L13-10G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L13-40G",
+     "name_full_th": "จุฬาเฮิร์บ บลูโรส ไบร์ทเทนนิ่ง อันเดอร์อาร์มครีม (หลอด) 40 กรัม",
+     "nickname_th": "ครีมกุหลาบน้ำเงิน",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L13-40G-320.webp",
+      "lg": "media/julas-herb/L13-40G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L13-10Gx6",
+     "nickname_th": "ครีมกุหลาบน้ำเงิน",
+     "size_value": 10,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/L13-10Gx6-320.webp",
+      "lg": "media/julas-herb/L13-10Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-watermelon-whip-foam",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์เมลอน ออร่า คลีนซิ่ง วิป โฟม",
+   "name_en": "Watermelon Aura Cleansing Whip Foam",
+   "nickname_th": "วิปโฟมแตงโม",
+   "themes": [
+    "watermelon"
+   ],
+   "image": {
+    "sm": "media/julas-herb/L14-70G-320.webp",
+    "lg": "media/julas-herb/L14-70G-960.webp"
+   },
+   "status": "active",
+   "sort": 35,
+   "skus": [
+    {
+     "sku": "L14-40G",
+     "name_full_th": "จุฬาเฮิร์บ วอร์เตอร์เมลอน ออร่า คลีนซิ่ง วิป โฟม 40 กรัม",
+     "nickname_th": "วิปโฟมแตงโม",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L14-40G-320.webp",
+      "lg": "media/julas-herb/L14-40G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L14-70G",
+     "name_full_th": "จุฬาเฮิร์บ วอร์เตอร์เมลอน ออร่า คลีนซิ่ง วิป โฟม 70 กรัม",
+     "nickname_th": "วิปโฟมแตงโม",
+     "size_value": 70,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/L14-70G-320.webp",
+      "lg": "media/julas-herb/L14-70G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "L14-40Gx6",
+     "nickname_th": "วิปโฟมแตงโม",
+     "size_value": 40,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/L14-40Gx6-320.webp",
+      "lg": "media/julas-herb/L14-40Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-marigold-acne-soap",
+   "brand_id": "julas-herb",
+   "name_th": "แมริโกลด์ แอคเน่ โซฟ",
+   "name_en": "Marigold Acne Soap",
+   "nickname_th": "สบู่ดาวเรือง",
+   "themes": [
+    "marigold"
+   ],
+   "image": {
+    "sm": "media/julas-herb/JH904-70G-320.webp",
+    "lg": "media/julas-herb/JH904-70G-960.webp"
+   },
+   "status": "active",
+   "sort": 36,
+   "skus": [
+    {
+     "sku": "JH904-70G",
+     "name_full_th": "จุฬาเฮิร์บ สบู่ดาวเรือง 70 กรัม",
+     "nickname_th": "สบู่ดาวเรือง",
+     "size_value": 70,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/JH904-70G-320.webp",
+      "lg": "media/julas-herb/JH904-70G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JH904-70Gx4",
+     "nickname_th": "สบู่ดาวเรือง",
+     "size_value": 70,
+     "size_unit": "g",
+     "pack_qty": 4,
+     "image": {
+      "sm": "media/julas-herb/JH904-70Gx4-320.webp",
+      "lg": "media/julas-herb/JH904-70Gx4-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-longan-melasma-soap",
+   "brand_id": "julas-herb",
+   "name_th": "ลองแกน เมลาสม่า โซฟ",
+   "name_en": "Longan Melasma Soap",
+   "nickname_th": "สบู่ลำไย",
+   "themes": [
+    "longan"
+   ],
+   "image": {
+    "sm": "media/julas-herb/JH906-70G-320.webp",
+    "lg": "media/julas-herb/JH906-70G-960.webp"
+   },
+   "status": "active",
+   "sort": 37,
+   "skus": [
+    {
+     "sku": "JH906-70G",
+     "name_full_th": "จุฬาเฮิร์บ สบู่ลำไย 70 กรัม",
+     "nickname_th": "สบู่ลำไย",
+     "size_value": 70,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/JH906-70G-320.webp",
+      "lg": "media/julas-herb/JH906-70G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JH906-70Gx4",
+     "nickname_th": "สบู่ลำไย",
+     "size_value": 70,
+     "size_unit": "g",
+     "pack_qty": 4,
+     "image": {
+      "sm": "media/julas-herb/JH906-70Gx4-320.webp",
+      "lg": "media/julas-herb/JH906-70Gx4-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-watermelon-aura-soap",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์เมลอน ออร่า โซฟ",
+   "name_en": "Watermelon Aura Soap",
+   "nickname_th": "สบู่แตงโม",
+   "themes": [
+    "watermelon"
+   ],
+   "image": {
+    "sm": "media/julas-herb/JH905-70G-320.webp",
+    "lg": "media/julas-herb/JH905-70G-960.webp"
+   },
+   "status": "active",
+   "sort": 38,
+   "skus": [
+    {
+     "sku": "JH905-70G",
+     "name_full_th": "จุฬาเฮิร์บ สบู่แตงโม 70 กรัม",
+     "nickname_th": "สบู่แตงโม",
+     "size_value": 70,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/JH905-70G-320.webp",
+      "lg": "media/julas-herb/JH905-70G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JH905-70Gx4",
+     "nickname_th": "สบู่แตงโม",
+     "size_value": 70,
+     "size_unit": "g",
+     "pack_qty": 4,
+     "image": {
+      "sm": "media/julas-herb/JH905-70Gx4-320.webp",
+      "lg": "media/julas-herb/JH905-70Gx4-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-carrot-ce-soap",
+   "brand_id": "julas-herb",
+   "name_th": "แครอท ซีแอนด์อี โซฟ",
+   "name_en": "Carrot C&E Soap",
+   "nickname_th": "สบู่แครอท",
+   "themes": [
+    "carrot"
+   ],
+   "image": {
+    "sm": "media/julas-herb/S4-70G-320.webp",
+    "lg": "media/julas-herb/S4-70G-960.webp"
+   },
+   "status": "active",
+   "sort": 39,
+   "skus": [
+    {
+     "sku": "S4-70G",
+     "name_full_th": "จุฬาเฮิร์บ แครอท ซีแอนด์อี โซฟ 70 กรัม",
+     "nickname_th": "สบู่แครอท",
+     "size_value": 70,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/S4-70G-320.webp",
+      "lg": "media/julas-herb/S4-70G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "S4-70Gx6",
+     "nickname_th": "สบู่แครอท",
+     "size_value": 70,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/S4-70Gx6-320.webp",
+      "lg": "media/julas-herb/S4-70Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-watermelon-soothing-gel",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์เมลอน ชูตติ้ง เจล",
+   "name_en": "Watermelon Soothing Gel",
+   "nickname_th": "เจลแตงโม",
+   "themes": [
+    "watermelon"
+   ],
+   "status": "active",
+   "sort": 40,
+   "skus": [
+    {
+     "sku": "JHP1-80G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน ชูตติ้ง เจล 80 มล.",
+     "nickname_th": "เจลแตงโม",
+     "size_value": 80,
+     "size_unit": "ml",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-mahad-body-serum",
+   "brand_id": "julas-herb",
+   "name_th": "มะหาด บอดี้ เซรั่ม อินเทนซีฟ ไวท์",
+   "name_en": "Mahad Body Serum Intensive White",
+   "nickname_th": "โลชั่นมะหาด",
+   "themes": [
+    "mahad"
+   ],
+   "status": "active",
+   "sort": 44,
+   "skus": [
+    {
+     "sku": "TB-JHM1-120G",
+     "name_full_th": "จุฬาเฮิร์บ มะหาด บอดี้ เซรั่ม อินเทนซีฟ ไวท์ 120 กรัม",
+     "nickname_th": "โลชันมะหาด",
+     "size_value": 120,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-avocado-pro-repair-lotion",
+   "brand_id": "julas-herb",
+   "name_th": "อโวคาโด โปร รีแพร์ มอยส์เจอร์ โลชั่น",
+   "name_en": "Avocado Pro Repair Moisture Lotion",
+   "nickname_th": "โลชั่นมอยส์เจอร์อโวคาโด",
+   "themes": [
+    "avocado"
+   ],
+   "status": "active",
+   "sort": 45,
+   "skus": [
+    {
+     "sku": "L16-200G",
+     "name_full_th": "จุฬาเฮิร์บ อโวคาโด โปร รีแพร์ มอยส์เจอร์ โลชั่น หลอด 200 กรัม",
+     "nickname_th": "โลชั่นมอยส์เจอร์อโวคาโด",
+     "size_value": 200,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-avocado-deep-moisture-shower-cream",
+   "brand_id": "julas-herb",
+   "name_th": "อโวคาโด ดีพ มอยส์เจอร์ ชาวเวอร์ ครีม",
+   "name_en": "Avocado Deep Moisture Shower Cream",
+   "nickname_th": "ครีมอาบน้ำอโวคาโด",
+   "themes": [
+    "avocado"
+   ],
+   "status": "draft",
+   "sort": 46,
+   "skus": []
+  },
+  {
+   "id": "jh-calendula-anti-acne-gel-foam",
+   "brand_id": "julas-herb",
+   "name_th": "คาเลนดูล่า แอนติ-แอคเน่ เจล โฟม",
+   "name_en": "Calendula Anti-Acne Gel Foam",
+   "nickname_th": "เจลโฟมดาวเรือง",
+   "themes": [
+    "marigold"
+   ],
+   "status": "draft",
+   "sort": 47,
+   "skus": []
+  },
+  {
+   "id": "jh-watermelon-matte-powder",
+   "brand_id": "julas-herb",
+   "name_th": "วอเตอร์เมลอน ฟิลเตอร์ ฟิท แมทท์ พาวเดอร์",
+   "name_en": "Watermelon Filter Fit Matte Control Powder",
+   "nickname_th": "แป้งพัฟแตงโม",
+   "themes": [
+    "watermelon"
+   ],
+   "image": {
+    "sm": "media/julas-herb/T6A-10G-320.webp",
+    "lg": "media/julas-herb/T6A-10G-960.webp"
+   },
+   "status": "active",
+   "sort": 48,
+   "skus": [
+    {
+     "sku": "T6A-5G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน ฟิลเตอร์ ฟิท แมทท์ พาวเดอร์ 5 กรัม",
+     "nickname_th": "แป้งพัฟแตงโม",
+     "size_value": 5,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/T6A-5G-320.webp",
+      "lg": "media/julas-herb/T6A-5G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "T6A-10G",
+     "name_full_th": "จุฬาเฮิร์บ วอเตอร์เมลอน ฟิลเตอร์ ฟิท แมทท์ พาวเดอร์ 10 กรัม",
+     "nickname_th": "แป้งพัฟแตงโม",
+     "size_value": 10,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/T6A-10G-320.webp",
+      "lg": "media/julas-herb/T6A-10G-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-24k-gold-longan-mask",
+   "brand_id": "julas-herb",
+   "name_th": "24 เค โกลด์ ลองแกน เฟซ มาส์ก",
+   "name_en": "24K Gold Longan Face Mask",
+   "nickname_th": "มาส์กลำไยทองคำ",
+   "themes": [
+    "longan",
+    "gold-24k"
+   ],
+   "image": {
+    "sm": "media/julas-herb/JHM2-30G-320.webp",
+    "lg": "media/julas-herb/JHM2-30G-960.webp"
+   },
+   "status": "active",
+   "sort": 49,
+   "skus": [
+    {
+     "sku": "JHM2-4G",
+     "name_full_th": "จุฬาเฮิร์บ 24 เคโกลด์ ลองแกน เฟซ มาส์ก 4 กรัม",
+     "nickname_th": "มาก์สลำไยทองคำ",
+     "size_value": 4,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/JHM2-4G-320.webp",
+      "lg": "media/julas-herb/JHM2-4G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JHM2-30G",
+     "name_full_th": "จุฬาเฮิร์บ 24 เค โกลด์ ลองแกน เฟซ มาสก์ 30 กรัม",
+     "nickname_th": "มาก์สลำไยทองคำ",
+     "size_value": 30,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/JHM2-30G-320.webp",
+      "lg": "media/julas-herb/JHM2-30G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "JHM2-4Gx6",
+     "nickname_th": "มาส์กลำไยทองคำ",
+     "size_value": 4,
+     "size_unit": "g",
+     "pack_qty": 6,
+     "image": {
+      "sm": "media/julas-herb/JHM2-4Gx6-320.webp",
+      "lg": "media/julas-herb/JHM2-4Gx6-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-cica-balancing-moisture-gel",
+   "brand_id": "julas-herb",
+   "name_th": "ซิก้า บาลานซ์ซิ่ง มอยส์เจอร์ เจล",
+   "name_en": "Cica Balancing Moisture Gel",
+   "nickname_th": "มอยส์เจอร์ซิก้าเจล",
+   "themes": [
+    "cica"
+   ],
+   "image": {
+    "sm": "media/julas-herb/R2-30G-320.webp",
+    "lg": "media/julas-herb/R2-30G-960.webp"
+   },
+   "status": "active",
+   "sort": 50,
+   "skus": [
+    {
+     "sku": "R2-30G",
+     "name_full_th": "จุฬาเฮิร์บ ซิก้า บาลานซ์ซิ่ง มอยส์เจอร์ เจล 30 กรัม",
+     "nickname_th": "มอยส์เจอร์ซิก้าเจล - ขวด",
+     "size_value": 30,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/R2-30G-320.webp",
+      "lg": "media/julas-herb/R2-30G-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jh-liposome-retinol-night-serum",
+   "brand_id": "julas-herb",
+   "name_th": "ไลโปโซม เรตินอล สมูท แอนด์ เฟิร์ม ไนท์ เซรั่ม",
+   "name_en": "Liposome Retinol Smooth & Firm Night Serum",
+   "nickname_th": "เรตินอล",
+   "themes": [
+    "retinol",
+    "sunflower"
+   ],
+   "image": {
+    "sm": "media/julas-herb/R1-30G-320.webp",
+    "lg": "media/julas-herb/R1-30G-960.webp"
+   },
+   "status": "active",
+   "sort": 51,
+   "skus": [
+    {
+     "sku": "R1-30G",
+     "name_full_th": "จุฬาเฮิร์บ ไลโปโซม เรตินอล สมูท แอนด์ เฟิร์ม ไนท์ เซรั่ม 30 กรัม (ขวด)",
+     "nickname_th": "เรตินอล",
+     "size_value": 30,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/julas-herb/R1-30G-320.webp",
+      "lg": "media/julas-herb/R1-30G-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jd-3in1-herbal-white-toothpaste",
+   "brand_id": "jdent",
+   "name_th": "จุฬาเฮิร์บ เจเด้นท์ 3 อิน 1 เฮอร์เบิล ไวท์ ทูธเพสท์",
+   "name_en": "Jula's Herb JDENT 3in1 Herbal White Toothpaste",
+   "nickname_th": "ยาสีฟันเจเด้นท์ 3in1 สูตรออริจินัลเฟรช",
+   "themes": [
+    "herbal"
+   ],
+   "image": {
+    "sm": "media/jdent/JHD1-70G-320.webp",
+    "lg": "media/jdent/JHD1-70G-960.webp"
+   },
+   "status": "active",
+   "sort": 58,
+   "skus": [
+    {
+     "sku": "JHD1-70G",
+     "name_full_th": "จุฬาเฮิร์บ ยาสีฟันเจเด้นท์ 3 in 1 เฮอร์เบิลไวท์ 70 กรัม",
+     "nickname_th": "ยาสีฟันเจเด้นท์ 3in1 สูตรออริจินัลเฟรช",
+     "variant_label": "แพ็กเกจเดิม",
+     "size_value": 70,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/jdent/JHD1-70G-320.webp",
+      "lg": "media/jdent/JHD1-70G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "D3-70G",
+     "name_full_th": "จุฬาเฮิร์บ เจเด้นท์ 3อิน1 เฮอร์เบิล ไวท์ ทูธเพสต์ ใหม่ 70 กรัม",
+     "nickname_th": "ยาสีฟันเจเด้นท์ 3in1 สูตรออริจินัลเฟรช",
+     "variant_label": "ดีไซน์ใหม่ (TOOTHPASTE+)",
+     "size_value": 70,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/jdent/D3-70G-320.webp",
+      "lg": "media/jdent/D3-70G-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jd-3x-extra-care-toothpaste",
+   "brand_id": "jdent",
+   "name_th": "จุฬาเฮิร์บ เจเด้นท์ 3X เอ็กซ์ตร้า แคร์ ทูธเพสท์",
+   "name_en": "Jula's Herb JDENT 3X Extra Care Toothpaste",
+   "nickname_th": "ยาสีฟันเจเด้นท์ 3X สูตรลดเสียวฟัน",
+   "themes": [
+    "herbal"
+   ],
+   "image": {
+    "sm": "media/jdent/D2-70G-320.webp",
+    "lg": "media/jdent/D2-70G-960.webp"
+   },
+   "status": "active",
+   "sort": 59,
+   "skus": [
+    {
+     "sku": "D2-70G",
+     "name_full_th": "จุฬาเฮิร์บ เจเด้นท์ 3X เอ็กซ์ตร้า แคร์ ทูธเพสท์ 70 กรัม",
+     "nickname_th": "ยาสีฟันเจเด้นท์ 3X สูตรลดเสียวฟัน",
+     "size_value": 70,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/jdent/D2-70G-320.webp",
+      "lg": "media/jdent/D2-70G-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jd-herbal-refreshing-mouthwash",
+   "brand_id": "jdent",
+   "name_th": "จุฬาเฮิร์บ เจเด้นท์ เฮอร์บัล รีเฟรชชิ่ง เมาท์วอช",
+   "name_en": "Jula's Herb JDENT Herbal Refreshing Mouthwash",
+   "nickname_th": "น้ำยาบ้วนปากเจเด้นท์",
+   "themes": [
+    "herbal",
+    "watermelon"
+   ],
+   "image": {
+    "sm": "media/jdent/D4-15G-320.webp",
+    "lg": "media/jdent/D4-15G-960.webp"
+   },
+   "status": "active",
+   "sort": 60,
+   "skus": [
+    {
+     "sku": "D4-15G",
+     "name_full_th": "จุฬาเฮิร์บ เจเด้นท์ เฮอร์บัล รีเฟรชชิ่ง เมาท์วอช คูล มินต์ เฟลเวอร์ 15 กรัม",
+     "nickname_th": "น้ำยาบ้วนปากเจเด้นท์",
+     "variant_label": "Cool Mint",
+     "size_value": 15,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/jdent/D4-15G-320.webp",
+      "lg": "media/jdent/D4-15G-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "D5-15G",
+     "name_full_th": "จุฬาเฮิร์บ เจเด้นท์ เฮอร์บัล รีเฟรชชิ่ง เมาท์วอช วอเตอร์เมลอน เฟลเวอร์ 15 กรัม",
+     "nickname_th": "น้ำยาบ้วนปากเจเด้นท์",
+     "variant_label": "Watermelon",
+     "size_value": 15,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/jdent/D5-15G-320.webp",
+      "lg": "media/jdent/D5-15G-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jv-gluta-acerola-cherry-intense-c-plus",
+   "brand_id": "jarvit",
+   "name_th": "ผลิตภัณฑ์เสริมอาหาร กลูต้า อะเซโรลา เชอร์รี่ อินเทนส์ ซี พลัส ตราจาร์วิต",
+   "name_en": "Jarvit Gluta Acerola Cherry Intense C Plus Dietary Supplement",
+   "nickname_th": "จาร์วิต กลูต้า",
+   "themes": [
+    "gluta",
+    "acerola"
+   ],
+   "image": {
+    "sm": "media/jarvit/V1-14C-320.webp",
+    "lg": "media/jarvit/V1-14C-960.webp"
+   },
+   "status": "active",
+   "sort": 61,
+   "skus": [
+    {
+     "sku": "V1-14C",
+     "name_full_th": "จุฬาเฮิร์บ จาร์วิต กลูต้า อะเซโรลา เชอร์รี่ อินเทนส์ ซี พลัส 14 แคปซูล",
+     "nickname_th": "จาร์วิต กลูต้า",
+     "variant_label": "1 ซอง 14 แคปซูล",
+     "size_value": 14,
+     "size_unit": "capsule",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/jarvit/V1-14C-320.webp",
+      "lg": "media/jarvit/V1-14C-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "btr-maxi-glow-lock-tint",
+   "brand_id": "beauterry",
+   "name_th": "มาย โฮม แม็กซี่ โกลว์ ล็อก ทินต์",
+   "name_en": "MY HOME Maxi Glow Lock Tint",
+   "nickname_th": "ลิปทินต์แม็กซี่โกลว์",
+   "themes": [],
+   "image": {
+    "sm": "media/beauterry/BTA1-01-320.webp",
+    "lg": "media/beauterry/BTA1-01-960.webp"
+   },
+   "status": "active",
+   "sort": 66,
+   "skus": [
+    {
+     "sku": "BTA1-01",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม แม็กซี่ โกลว์ ล็อก ทินต์ 01 ดัสตี โรส",
+     "nickname_th": "ลิปทินต์แม็กซี่โกลว์",
+     "variant_label": "01 Dusty Rose",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA1-01-320.webp",
+      "lg": "media/beauterry/BTA1-01-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA1-02",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม แม็กซี่ โกลว์ ล็อก ทินต์ 02 พีโอนี พิงก์",
+     "nickname_th": "ลิปทินต์แม็กซี่โกลว์",
+     "variant_label": "02 Peony Pink",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA1-02-320.webp",
+      "lg": "media/beauterry/BTA1-02-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA1-03",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม แม็กซี่ โกลว์ ล็อก ทินต์ 03 แบร์ โทป",
+     "nickname_th": "ลิปทินต์แม็กซี่โกลว์",
+     "variant_label": "03 Bare Taupe",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA1-03-320.webp",
+      "lg": "media/beauterry/BTA1-03-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA1-04",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม แม็กซี่ โกลว์ ล็อก ทินต์ 04 โรสวูด",
+     "nickname_th": "ลิปทินต์แม็กซี่โกลว์",
+     "variant_label": "04 Rosewood",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA1-04-320.webp",
+      "lg": "media/beauterry/BTA1-04-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA1-05",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม แม็กซี่ โกลว์ ล็อก ทินต์ 05 ซอฟต์ แอมเบอร์",
+     "nickname_th": "ลิปทินต์แม็กซี่โกลว์",
+     "variant_label": "05 Soft Amber",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA1-05-320.webp",
+      "lg": "media/beauterry/BTA1-05-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA1-06",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม แม็กซี่ โกลว์ ล็อก ทินต์ 06 คอรัล ป๊อป",
+     "nickname_th": "ลิปทินต์แม็กซี่โกลว์",
+     "variant_label": "06 Coral Pop",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA1-06-320.webp",
+      "lg": "media/beauterry/BTA1-06-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "btr-layer-trio-blush-palette",
+   "brand_id": "beauterry",
+   "name_th": "มาย โฮม เลเยอร์ ทรีโอ บลัช พาเลตต์",
+   "name_en": "MY HOME Layer Trio Blush Palette",
+   "nickname_th": "บลัชพาเลตต์ 3 สี",
+   "themes": [],
+   "image": {
+    "sm": "media/beauterry/BTA2-01-320.webp",
+    "lg": "media/beauterry/BTA2-01-960.webp"
+   },
+   "status": "active",
+   "sort": 67,
+   "skus": [
+    {
+     "sku": "BTA2-01",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม เลเยอร์ ทรีโอ บลัช พาเลตต์ 01 คูล โรสซี่",
+     "nickname_th": "บลัชพาเลตต์ 3 สี",
+     "variant_label": "01 Cool Rosy",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA2-01-320.webp",
+      "lg": "media/beauterry/BTA2-01-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA2-02",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม เลเยอร์ ทรีโอ บลัช พาเลตต์ 02 นิวทรัล พอยส์",
+     "nickname_th": "บลัชพาเลตต์ 3 สี",
+     "variant_label": "02 Neutral Poise",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA2-02-320.webp",
+      "lg": "media/beauterry/BTA2-02-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA2-03",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม เลเยอร์ ทรีโอ บลัช พาเลตต์ 03 วอร์ม ออลัวร์",
+     "nickname_th": "บลัชพาเลตต์ 3 สี",
+     "variant_label": "03 Warm Allure",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA2-03-320.webp",
+      "lg": "media/beauterry/BTA2-03-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "btr-all-look-eye-palette",
+   "brand_id": "beauterry",
+   "name_th": "มาย โฮม ออล ลุค เอฟเวอรีเดย์ อาย พาเลตต์",
+   "name_en": "MY HOME All Look Everyday Eye Palette",
+   "nickname_th": "อายแชโดว์พาเลตต์ 9 สี",
+   "themes": [],
+   "image": {
+    "sm": "media/beauterry/BTA3-01-320.webp",
+    "lg": "media/beauterry/BTA3-01-960.webp"
+   },
+   "status": "active",
+   "sort": 68,
+   "skus": [
+    {
+     "sku": "BTA3-01",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม ออล ลุค เอฟเวอรีเดย์ อาย พาเลตต์ 01 คูล เบอร์รี่",
+     "nickname_th": "อายแชโดว์พาเลตต์ 9 สี",
+     "variant_label": "01 Cool Berry",
+     "size_value": 8.1,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA3-01-320.webp",
+      "lg": "media/beauterry/BTA3-01-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA3-02",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม ออล ลุค เอฟเวอรีเดย์ อาย พาเลตต์ 02 ไควเอ็ต นู้ด",
+     "nickname_th": "อายแชโดว์พาเลตต์ 9 สี",
+     "variant_label": "02 Quiet Nude",
+     "size_value": 8.1,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA3-02-320.webp",
+      "lg": "media/beauterry/BTA3-02-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA3-03",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม ออล ลุค เอฟเวอรีเดย์ อาย พาเลตต์ 03 วอร์ม โคซี่",
+     "nickname_th": "อายแชโดว์พาเลตต์ 9 สี",
+     "variant_label": "03 Warm Cozy",
+     "size_value": 8.1,
+     "size_unit": "g",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA3-03-320.webp",
+      "lg": "media/beauterry/BTA3-03-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "btr-comfort-soft-glow-cushion",
+   "brand_id": "beauterry",
+   "name_th": "มาย โฮม คอมฟอร์ต ซอฟต์ โกลว์ คุชชั่น เอสพีเอฟ 50+ พีเอ+++",
+   "name_en": "MY HOME Comfort Soft Glow Cushion SPF50+ PA+++",
+   "nickname_th": "คุชชั่นซอฟต์โกลว์",
+   "themes": [],
+   "image": {
+    "sm": "media/beauterry/BTA4-00-320.webp",
+    "lg": "media/beauterry/BTA4-00-960.webp"
+   },
+   "status": "active",
+   "sort": 69,
+   "skus": [
+    {
+     "sku": "BTA4-00",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม คอมฟอร์ต ซอฟต์ โกลว์ คุชชั่น เอสพีเอฟ 50+ พีเอ+++ 00 ไวท์ คลาวด์",
+     "nickname_th": "คุชชั่นซอฟต์โกลว์",
+     "variant_label": "00 White Cloud",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA4-00-320.webp",
+      "lg": "media/beauterry/BTA4-00-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA4-01",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม คอมฟอร์ต ซอฟต์ โกลว์ คุชชั่น เอสพีเอฟ 50+ พีเอ+++ 01 แฟร์ ไลต์",
+     "nickname_th": "คุชชั่นซอฟต์โกลว์",
+     "variant_label": "01 Fair Light",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA4-01-320.webp",
+      "lg": "media/beauterry/BTA4-01-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA4-02",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม คอมฟอร์ต ซอฟต์ โกลว์ คุชชั่น เอสพีเอฟ 50+ พีเอ+++ 02 คูล พอร์ซเลน",
+     "nickname_th": "คุชชั่นซอฟต์โกลว์",
+     "variant_label": "02 Cool Porcelain",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA4-02-320.webp",
+      "lg": "media/beauterry/BTA4-02-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA4-03",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม คอมฟอร์ต ซอฟต์ โกลว์ คุชชั่น เอสพีเอฟ 50+ พีเอ+++ 03 วอร์ม ไอวอรี",
+     "nickname_th": "คุชชั่นซอฟต์โกลว์",
+     "variant_label": "03 Warm Ivory",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA4-03-320.webp",
+      "lg": "media/beauterry/BTA4-03-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA4-04",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม คอมฟอร์ต ซอฟต์ โกลว์ คุชชั่น เอสพีเอฟ 50+ พีเอ+++ 04 นิวทรัล เบจ",
+     "nickname_th": "คุชชั่นซอฟต์โกลว์",
+     "variant_label": "04 Neutral Beige",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA4-04-320.webp",
+      "lg": "media/beauterry/BTA4-04-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA4-05",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม คอมฟอร์ต ซอฟต์ โกลว์ คุชชั่น เอสพีเอฟ 50+ พีเอ+++ 05 คูล เพเทล",
+     "nickname_th": "คุชชั่นซอฟต์โกลว์",
+     "variant_label": "05 Cool Petal",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA4-05-320.webp",
+      "lg": "media/beauterry/BTA4-05-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA4-06",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม คอมฟอร์ต ซอฟต์ โกลว์ คุชชั่น เอสพีเอฟ 50+ พีเอ+++ 06 วอร์ม แซนด์",
+     "nickname_th": "คุชชั่นซอฟต์โกลว์",
+     "variant_label": "06 Warm Sand",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA4-06-320.webp",
+      "lg": "media/beauterry/BTA4-06-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "BTA4-07",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม คอมฟอร์ต ซอฟต์ โกลว์ คุชชั่น เอสพีเอฟ 50+ พีเอ+++ 07 วอร์ม ฮันนี่",
+     "nickname_th": "คุชชั่นซอฟต์โกลว์",
+     "variant_label": "07 Warm Honey",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTA4-07-320.webp",
+      "lg": "media/beauterry/BTA4-07-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "btr-pillow-puff",
+   "brand_id": "beauterry",
+   "name_th": "มาย โฮม พิลโลว์ พัฟ 18 มม.",
+   "name_en": "MY HOME Pillow Puff 18 mm",
+   "nickname_th": "พัฟพิลโลว์",
+   "themes": [],
+   "image": {
+    "sm": "media/beauterry/BTB1-320.webp",
+    "lg": "media/beauterry/BTB1-960.webp"
+   },
+   "status": "active",
+   "sort": 70,
+   "skus": [
+    {
+     "sku": "BTB1",
+     "name_full_th": "บิวเทอร์รี่ มาย โฮม พิลโลว์ พัฟ 18 มม.",
+     "nickname_th": "พัฟพิลโลว์",
+     "variant_label": "18 มม. (70×75×18 มม.)",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/beauterry/BTB1-320.webp",
+      "lg": "media/beauterry/BTB1-960.webp"
+     },
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jn-morning-bloom-edp",
+   "brand_id": "jernis",
+   "name_th": "เจอร์นิส มอร์นิ่ง บลูม โอ เดอ พาร์ฟูม",
+   "name_en": "JERNIS Morning Bloom Eau de Parfum",
+   "nickname_th": "น้ำหอม Morning Bloom",
+   "themes": [
+    "floral-fruity"
+   ],
+   "image": {
+    "sm": "media/jernis/TMP-JN-MB-EDP-320.webp",
+    "lg": "media/jernis/TMP-JN-MB-EDP-960.webp"
+   },
+   "status": "active",
+   "sort": 71,
+   "skus": [
+    {
+     "sku": "TMP-JN-MB-EDP",
+     "name_full_th": "เจอร์นิส มอร์นิ่ง บลูม โอ เดอ พาร์ฟูม",
+     "nickname_th": "น้ำหอม Morning Bloom",
+     "variant_label": "Eau de Parfum",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/jernis/TMP-JN-MB-EDP-320.webp",
+      "lg": "media/jernis/TMP-JN-MB-EDP-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "TMP-JN-MB-MINI",
+     "name_full_th": "เจอร์นิส มอร์นิ่ง บลูม มินิ พาร์ฟูม เซ็ต",
+     "nickname_th": "น้ำหอม Morning Bloom",
+     "variant_label": "Mini Parfum Set",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jn-midnight-muse-edp",
+   "brand_id": "jernis",
+   "name_th": "เจอร์นิส มิดไนท์ มิวส์ โอ เดอ พาร์ฟูม",
+   "name_en": "JERNIS Midnight Muse Eau de Parfum",
+   "nickname_th": "น้ำหอม Midnight Muse",
+   "themes": [
+    "floral-fruity"
+   ],
+   "image": {
+    "sm": "media/jernis/TMP-JN-MM-EDP-320.webp",
+    "lg": "media/jernis/TMP-JN-MM-EDP-960.webp"
+   },
+   "status": "active",
+   "sort": 72,
+   "skus": [
+    {
+     "sku": "TMP-JN-MM-EDP",
+     "name_full_th": "เจอร์นิส มิดไนท์ มิวส์ โอ เดอ พาร์ฟูม",
+     "nickname_th": "น้ำหอม Midnight Muse",
+     "variant_label": "Eau de Parfum",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/jernis/TMP-JN-MM-EDP-320.webp",
+      "lg": "media/jernis/TMP-JN-MM-EDP-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "TMP-JN-MM-MINI",
+     "name_full_th": "เจอร์นิส มิดไนท์ มิวส์ มินิ พาร์ฟูม เซ็ต",
+     "nickname_th": "น้ำหอม Midnight Muse",
+     "variant_label": "Mini Parfum Set",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jn-soft-whisper-edp",
+   "brand_id": "jernis",
+   "name_th": "เจอร์นิส ซอฟต์ วิสเพอร์ โอ เดอ พาร์ฟูม",
+   "name_en": "JERNIS Soft Whisper Eau de Parfum",
+   "nickname_th": "น้ำหอม Soft Whisper",
+   "themes": [
+    "floral-fruity"
+   ],
+   "image": {
+    "sm": "media/jernis/TMP-JN-SW-EDP-320.webp",
+    "lg": "media/jernis/TMP-JN-SW-EDP-960.webp"
+   },
+   "status": "active",
+   "sort": 73,
+   "skus": [
+    {
+     "sku": "TMP-JN-SW-EDP",
+     "name_full_th": "เจอร์นิส ซอฟต์ วิสเพอร์ โอ เดอ พาร์ฟูม",
+     "nickname_th": "น้ำหอม Soft Whisper",
+     "variant_label": "Eau de Parfum",
+     "pack_qty": 1,
+     "image": {
+      "sm": "media/jernis/TMP-JN-SW-EDP-320.webp",
+      "lg": "media/jernis/TMP-JN-SW-EDP-960.webp"
+     },
+     "status": "active"
+    },
+    {
+     "sku": "TMP-JN-SW-MINI",
+     "name_full_th": "เจอร์นิส ซอฟต์ วิสเพอร์ มินิ พาร์ฟูม เซ็ต",
+     "nickname_th": "น้ำหอม Soft Whisper",
+     "variant_label": "Mini Parfum Set",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "id": "jn-all-through-your-day-mini-set",
+   "brand_id": "jernis",
+   "name_th": "เจอร์นิส ออล ทรู ยัวร์ เดย์ มินิ พาร์ฟูม เซ็ต",
+   "name_en": "JERNIS All Through Your Day Mini Parfum Set",
+   "nickname_th": "เซ็ตน้ำหอมมินิ 3 กลิ่น",
+   "themes": [
+    "floral-fruity"
+   ],
+   "status": "active",
+   "sort": 74,
+   "skus": [
+    {
+     "sku": "TMP-JN-SET-3",
+     "name_full_th": "เจอร์นิส ออล ทรู ยัวร์ เดย์ มินิ พาร์ฟูม เซ็ต",
+     "nickname_th": "เซ็ตน้ำหอมมินิ 3 กลิ่น",
+     "variant_label": "Mini Parfum Set 3 กลิ่น",
+     "pack_qty": 1,
+     "status": "active"
+    }
+   ]
+  }
+ ]
+}

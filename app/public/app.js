@@ -13,7 +13,7 @@ const GROUPS = {
 };
 const ISSUE_TYPES = {
   unmatched: "SKU ไม่มีในแคตาล็อก",
-  "name-mismatch": "SKU กับชื่อสินค้าไม่ตรงกัน",
+  "name-mismatch": "ชื่อในไฟล์ไม่ตรงกับรหัส (แดชบอร์ดใช้ตามรหัส)",
   size: "ขนาดนี้ไม่มีในแคตาล็อก",
   date: "วันที่อ่านไม่ได้",
   "date-text": "วันที่เป็นข้อความ",
@@ -172,6 +172,12 @@ function miniBar(qty, total, h = 8) {
 }
 
 const matchFlag = (it) => (it.match === "none" ? `<span class="flag none">ไม่พบในแคตาล็อก</span>` : it.match === "product" ? `<span class="flag">ตรวจขนาด</span>` : "");
+/** Remarks typed after "//" in the Excel name (ไม่มีกล่อง, กล่องสีซีด …), unique per item. */
+const notesOf = (a) => [...new Set(a.rows.map((r) => r.note).filter(Boolean))];
+const noteFlag = (a) => {
+  const notes = notesOf(a);
+  return notes.length ? `<span class="flag note" title="${esc(notes.join(" · "))}">📝 ${esc(notes.length === 1 ? notes[0] : `หมายเหตุ ${notes.length} ข้อ`)}</span>` : "";
+};
 
 function cardsHtml(list) {
   // The big number follows the selected group (ขายต่อได้ by default).
@@ -183,7 +189,7 @@ function cardsHtml(list) {
       const s = a.sum;
       const others = ["rush", "expired", "sell"].filter((g) => g !== focus && s[g]);
       return `<button type="button" class="card" data-item="${esc(it.key)}">
-        <div class="thumb">${thumb(it)}${matchFlag(it)}</div>
+        <div class="thumb">${thumb(it)}${matchFlag(it)}${noteFlag(a)}</div>
         <div class="card-body">
           <div class="name" title="${esc(it.name)}">${esc(it.name)}</div>
           <div class="skuline"><span class="mono">${esc(it.sku)}</span>${it.brandName ? `· ${esc(it.brandName)}` : ""}</div>
@@ -311,9 +317,10 @@ function openDetail(key) {
   if (!a) return;
   const it = a.item;
   const month = DATA.months.find((m) => m.key === state.month);
-  const issues = scopedIssues().filter((i) => i.itemKey === key);
+  const issues = scopedIssues().filter((i) => i.itemKey === key && i.type !== "name-mismatch"); // the code wins; name differences stay in ตรวจข้อมูล
   const rows = [...a.rows].sort((x, y) => (x.date || "").localeCompare(y.date || "") || x.row - y.row);
   const showLoc = rows.some((r) => r.location);
+  const showNote = rows.some((r) => r.note);
   const dlg = $("#detail");
   dlg.innerHTML = `
     <button class="d-close" type="button" aria-label="ปิด" data-close>✕</button>
@@ -339,11 +346,11 @@ function openDetail(key) {
       }
       <h3 style="font-size:15px">รายการที่มาจากไฟล์ Excel (${fmt(rows.length)} แถว)</h3>
       <div class="tablewrap"><table>
-        <thead><tr><th>วันที่</th><th>SKU ในไฟล์</th><th>ชื่อในไฟล์</th>${DATA.grades.map((g) => `<th class="r"><span class="gh"><i style="background:${gradeColor(g.key)}"></i>${g.label}</span></th>`).join("")}${showLoc ? "<th>Location</th>" : ""}<th>แท็บ / แถว</th></tr></thead>
+        <thead><tr><th>วันที่</th><th>SKU ในไฟล์</th><th>ชื่อในไฟล์</th>${DATA.grades.map((g) => `<th class="r"><span class="gh"><i style="background:${gradeColor(g.key)}"></i>${g.label}</span></th>`).join("")}${showLoc ? "<th>Location</th>" : ""}${showNote ? "<th>หมายเหตุ</th>" : ""}<th>แท็บ / แถว</th></tr></thead>
         <tbody>${rows
           .map(
             (r) => `<tr style="cursor:default"><td>${r.date ? thDate(r.date) : `<span class="muted">${esc(r.dateRaw || "—")}</span>`}</td><td class="mono">${esc(r.skuRaw)}</td><td style="white-space:normal;min-width:200px">${esc(r.nameRaw)}</td>
-              ${DATA.grades.map((g) => `<td class="r num ${r.qty[g.key] ? "" : "zero"}">${r.qty[g.key] ? fmt(r.qty[g.key]) : "–"}</td>`).join("")}${showLoc ? `<td>${esc(r.location)}</td>` : ""}<td class="muted">${esc(r.sheet)} / ${r.row}</td></tr>`,
+              ${DATA.grades.map((g) => `<td class="r num ${r.qty[g.key] ? "" : "zero"}">${r.qty[g.key] ? fmt(r.qty[g.key]) : "–"}</td>`).join("")}${showLoc ? `<td>${esc(r.location)}</td>` : ""}${showNote ? `<td style="white-space:normal">${r.note ? `<b>📝 ${esc(r.note)}</b>` : ""}</td>` : ""}<td class="muted">${esc(r.sheet)} / ${r.row}</td></tr>`,
           )
           .join("")}</tbody>
       </table></div>

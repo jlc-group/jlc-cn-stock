@@ -61,3 +61,11 @@ test("name pointing at another product is flagged", () => {
   const pore = catalog.products.find((p) => p.id === "pore");
   assert.equal(nameMismatch(row, pore, index), null);
 });
+
+test("sku-map can redirect to a size the catalog does not list", () => {
+  const map = new Map([["JH1MO4", { sku: "C2-40G" }]]);
+  const m = matchRow({ sku: "JH1", skuRaw: "JH1-MO4", nameRaw: "มอรินก้า 6G" }, index, map);
+  assert.equal(m.type, "product");
+  assert.equal(m.product.id, "moringa");
+  assert.equal(m.alias, "C2-40G");
+});

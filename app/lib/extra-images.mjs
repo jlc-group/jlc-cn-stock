@@ -23,20 +23,26 @@ export function parseImageName(file) {
   return { file, code, size, kind, box };
 }
 
+/** Image files directly inside each folder (not recursive); a missing folder is skipped. */
+export function listImageFiles(dirs) {
+  const out = [];
+  for (const dir of [dirs].flat().filter(Boolean)) {
+    try {
+      out.push(...fs.readdirSync(dir));
+    } catch {}
+  }
+  return out;
+}
+
 /**
- * Scan `dir` (not recursive) and assign images to catalog SKUs that have none.
+ * Scan one or more folders and assign images to catalog SKUs that have none.
+ * Earlier folders win when two hold a photo for the same SKU.
  * @returns {{ bySku: Map<string, {sm,lg}>, byProduct: Map<string, {sm,lg}> }}
  */
-export function scanExtraImages(dir, index) {
+export function scanExtraImages(dirs, index) {
   const bySku = new Map();
   const byProduct = new Map();
-  let files = [];
-  try {
-    files = fs.readdirSync(dir);
-  } catch {
-    return { bySku, byProduct };
-  }
-  const found = files.map(parseImageName).filter(Boolean);
+  const found = listImageFiles(dirs).map(parseImageName).filter(Boolean);
   // explicit size first, then sachet/tube hints, then generic; within each, a single-piece photo beats a box photo
   const rank = (f) => (f.size ? 0 : f.kind !== "any" ? 1 : 2) * 2 + (f.box ? 1 : 0);
   found.sort((a, b) => rank(a) - rank(b));

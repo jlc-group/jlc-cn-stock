@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import XLSX from "xlsx";
-import { cleanSku, gradeNote, monthFromSheet, parseDate, parseWorkbook } from "./parse-cn.mjs";
+import { cleanSku, gradeNote, monthFromSheet, parseDate, parseWorkbook, splitNote } from "./parse-cn.mjs";
 
 test("monthFromSheet reads MM.YY tabs and skips others", () => {
   assert.deepEqual(monthFromSheet("09.26"), { key: "2026-09", label: "ก.ย. 69" });
@@ -61,4 +61,21 @@ test("parseWorkbook copes with an inserted column", () => {
   const wb = book({ "09.26": [["วันที่", "หมายเหตุ", "SKU", "ชื่อสินค้า", "X=หมดอายุ", "A+ =10/28-07/29"], [25471, "x", "L3-8G", "ดีดี", 5, 7]] });
   const { rows } = parseWorkbook(wb);
   assert.deepEqual(rows[0].qty, { X: 5, Aplus: 7 });
+});
+
+test("splitNote keeps remarks after // apart from the name", () => {
+  assert.deepEqual(splitNote("ดีดีครีมวอเตอร์เมลอนซันสกรีน 40g //// ไม่มีกล่อง"), { name: "ดีดีครีมวอเตอร์เมลอนซันสกรีน 40g", note: "ไม่มีกล่อง" });
+  assert.deepEqual(splitNote("ทูธเพสท์+ 70กรัม//// ไม่มีกล่อง"), { name: "ทูธเพสท์+ 70กรัม", note: "ไม่มีกล่อง" });
+  assert.deepEqual(splitNote("อโวคาโด ครีม 8G // ยังไม่แกะกล่อง"), { name: "อโวคาโด ครีม 8G", note: "ยังไม่แกะกล่อง" });
+  assert.deepEqual(splitNote("ซอฟท์-เบลอ ยูวี เจล 7 กรัม"), { name: "ซอฟท์-เบลอ ยูวี เจล 7 กรัม", note: "" });
+});
+
+test('"-" in the date column is a deliberate no-date, not an issue', () => {
+  const head = ["วันที่", "SKU", "ชื่อสินค้า", "A+ =11/28-08/29", "X=หมดอายุ", "อื่นๆ"];
+  const wb = book({ "09.26": [head, ["-", "L3-40G", "ดีดีครีม 40g //// ไม่มีกล่อง", 50, 5, "Zentro"], [null, "L3-8G", "ดีดีครีม 8g", 1, null, null]] });
+  const { rows, issues } = parseWorkbook(wb);
+  assert.equal(rows[0].date, null);
+  assert.equal(rows[0].note, "ไม่มีกล่อง");
+  assert.equal(rows[0].nameRaw, "ดีดีครีม 40g");
+  assert.deepEqual(issues.map((i) => [i.row, i.type]), [[3, "date"]]); // only the truly empty date is flagged
 });

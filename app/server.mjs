@@ -14,17 +14,30 @@ const DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(DIR, "..");
 const PUBLIC = path.join(DIR, "public");
 const FONTS = path.join(REPO, "node_modules", "@fontsource");
-// Product names/photos: $PRODUCT_INFO_DIR, else "product-info/" inside this project (from the data bundle,
-// see scripts/make-bundle.mjs), else the jlc-product-info project next to this one.
-const BUNDLED_INFO = path.join(REPO, "product-info");
-// Checked on every request (not once at startup), so unzipping the data while the app is already open still works.
-const productInfo = () =>
-  path.resolve(process.env.PRODUCT_INFO_DIR || (fs.existsSync(BUNDLED_INFO) ? BUNDLED_INFO : path.join(REPO, "..", "jlc-product-info")));
-const catalogFile = () => path.join(productInfo(), "data", "build", "catalog.internal.json");
-const mediaDir = () => path.join(productInfo(), "web", "public", "media");
+// Product names/photos, first one found (checked on every request, so adding a folder while the app runs works):
+//   1. $PRODUCT_INFO_DIR                      a jlc-product-info checkout
+//   2. product-info/ in this project          from an older data bundle
+//   3. ../jlc-product-info                    the full project next to this one (freshest)
+//   4. catalog/ in this project               names + photos kept in the repo (npm run sync-products)
+const fullLayout = (dir) => ({
+  dir,
+  catalog: path.join(dir, "data", "build", "catalog.internal.json"),
+  media: path.join(dir, "web", "public", "media"),
+  extras: dir, // extra photos sit directly in the folder, named with the code in brackets
+});
+function productSource() {
+  if (process.env.PRODUCT_INFO_DIR) return fullLayout(path.resolve(process.env.PRODUCT_INFO_DIR));
+  for (const dir of [path.join(REPO, "product-info"), path.join(REPO, "..", "jlc-product-info")]) {
+    const src = fullLayout(dir);
+    if (fs.existsSync(src.catalog)) return src;
+  }
+  const dir = path.join(REPO, "catalog");
+  return { dir, catalog: path.join(dir, "catalog.json"), media: path.join(dir, "media"), extras: path.join(dir, "extra") };
+}
 const SKU_MAP = path.join(REPO, "data", "sku-map.json");
+// Photos added in this project (kept in the repo), named with the code in brackets like the extra photos
+const PHOTOS = path.join(REPO, "photos");
 const EXTRACTS = path.join(REPO, "data", "extracts.json");
-// Extra product photos sit directly in the product-info folder, named with the code in brackets: "เซรั่มขิงดำ - หลอด (JH707-40g).jpg"
 const APP_ID = "jlc-cn-stock";
 
 const FIRST_PORT = Number(process.env.PORT) || 5230;
@@ -57,11 +70,10 @@ const mtime = (p) => {
 let cache = { stamp: "", data: null };
 function getData() {
   const xlsx = cnFile();
-  const info = productInfo();
-  const catalog = catalogFile();
-  const stamp = [xlsx, mtime(xlsx), info, mtime(catalog), mtime(SKU_MAP), mtime(EXTRACTS), mtime(info)].join("|");
+  const src = productSource();
+  const stamp = [xlsx, mtime(xlsx), src.dir, mtime(src.catalog), mtime(SKU_MAP), mtime(EXTRACTS), mtime(src.extras), mtime(PHOTOS)].join("|");
   if (cache.stamp !== stamp) {
-    cache = { stamp, data: buildData({ xlsx, catalogFile: catalog, skuMapFile: SKU_MAP, extraImageDir: info, extractsFile: EXTRACTS }) };
+    cache = { stamp, data: buildData({ xlsx, catalogFile: src.catalog, skuMapFile: SKU_MAP, extraImageDir: [src.extras, PHOTOS], extractsFile: EXTRACTS }) };
   }
   return cache.data;
 }
@@ -118,12 +130,13 @@ const server = http.createServer((req, res) => {
       return json(res, 500, { error: msg });
     }
   }
-  if (pathname.startsWith("/media/")) return sendFile(res, mediaDir(), pathname.slice("/media/".length), 86400);
+  if (pathname.startsWith("/media/")) return sendFile(res, productSource().media, pathname.slice("/media/".length), 86400);
   if (pathname.startsWith("/extra/")) {
     // only image files directly in the product-info folder, nothing else from it
     const name = pathname.slice("/extra/".length);
     if (name.includes("/") || name.includes("\\") || !/\.(jpe?g|png|webp)$/i.test(name)) return send(res, 404, "not found");
-    return sendFile(res, productInfo(), name, 3600);
+    const dir = [productSource().extras, PHOTOS].find((d) => fs.existsSync(path.join(d, name)));
+    return dir ? sendFile(res, dir, name, 3600) : send(res, 404, "not found");
   }
   if (pathname.startsWith("/fonts/")) return sendFile(res, FONTS, pathname.slice("/fonts/".length), 86400);
   return sendFile(res, PUBLIC, pathname === "/" ? "index.html" : pathname.slice(1));
@@ -150,7 +163,10 @@ function isOurs(port) {
 
 function openBrowser(url) {
   const cmd = process.platform === "win32" ? ["cmd", ["/c", "start", "", url]] : process.platform === "darwin" ? ["open", [url]] : ["xdg-open", [url]];
-  spawn(cmd[0], cmd[1], { stdio: "ignore", detached: true }).unref();
+  const child = spawn(cmd[0], cmd[1], { stdio: "ignore", detached: true });
+  // e.g. a Linux machine without xdg-open: keep running, just print the address to open by hand
+  child.on("error", () => console.log(`เปิดเบราว์เซอร์เองไม่ได้ ให้เปิด ${url} ในเบราว์เซอร์`));
+  child.unref();
 }
 
 async function start(port) {
@@ -172,7 +188,8 @@ async function start(port) {
     const url = `http://localhost:${port}/`;
     console.log(`CN Dashboard: ${url}`);
     console.log(`ไฟล์ CN: ${cnFile()}`);
-    console.log(fs.existsSync(catalogFile()) ? `แคตาล็อก: ${catalogFile()}` : `ไม่พบแคตาล็อก (${catalogFile()}) จะใช้ชื่อจาก Excel และไม่มีรูป`);
+    const src = productSource();
+    console.log(fs.existsSync(src.catalog) ? `ชื่อและรูปสินค้า: ${src.catalog}` : `ไม่พบข้อมูลสินค้า (${src.catalog}) จะใช้ชื่อจาก Excel และไม่มีรูป`);
     console.log("กด Ctrl+C เพื่อปิด");
     if (OPEN) openBrowser(url);
   });

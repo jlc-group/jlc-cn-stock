@@ -17,11 +17,13 @@ function loadExtracts(file) {
   }
 }
 
+const withSize = (name, size) => (size ? `${name} ${size.value} ${size.unit === "ml" ? "มล." : size.unit === "c" ? "แคปซูล" : "กรัม"}` : name);
+
 const MATCH_LABEL = {
   map: "จับคู่จาก sku-map.json",
   exact: "SKU ตรงกับแคตาล็อก",
   size: "จับคู่จากรหัสหลัก + ขนาด",
-  product: "จับคู่ได้ระดับสินค้า (ไม่เจอขนาดนี้)",
+  product: "รหัสตรงกับสินค้าในแคตาล็อก แต่ไม่มีขนาดนี้",
   none: "จับคู่ไม่ได้",
 };
 
@@ -67,14 +69,17 @@ export function buildData({ xlsx, catalogFile, skuMapFile, extraImageDir, extrac
     if (!r.sku) continue;
     const m = matchRow(r, index, skuMap);
     // One dashboard item per catalog SKU; product-level matches keep the size typed in Excel apart.
-    const itemKey = m.sku ? m.sku.sku : m.product ? `${m.product.id}|${r.sku}` : `raw|${keyOf(r.sku)}`;
+    const sku = m.alias ?? r.sku; // sku-map can redirect a typo to another code, e.g. JH1-MO4 → JHK1-6G
+    const itemKey = m.sku ? m.sku.sku : m.product ? `${m.product.id}|${sku}` : `raw|${keyOf(sku)}`;
     if (!items[itemKey]) {
       const brand = m.product ? index.brands.get(m.product.brand_id) : null;
       items[itemKey] = {
         key: itemKey,
-        sku: m.sku?.sku ?? r.sku,
+        sku: m.sku?.sku ?? sku,
         // The brand is shown next to the name, so drop the "จุฬาเฮิร์บ " prefix most catalog names carry.
-        name: (m.sku?.name_full_th || m.product?.name_th || r.nameRaw || r.sku).replace(/^จุฬาเฮิร์บ\s*/, ""),
+        // The code decides the name: a size missing from the catalog (JHK1-6G) still shows its size, so it never looks
+        // like the same card as JHK1-8G.
+        name: (m.sku?.name_full_th || (m.product ? withSize(m.product.name_th, splitSku(sku).size) : "") || r.nameRaw || sku).replace(/^จุฬาเฮิร์บ\s*/, ""),
         productName: m.product?.name_th ?? "",
         nameEn: m.product?.name_en ?? "",
         nickname: m.product?.nickname_th ?? "",
@@ -83,7 +88,7 @@ export function buildData({ xlsx, catalogFile, skuMapFile, extraImageDir, extrac
         brandName: brand?.name_en ?? (m.product ? m.product.brand_id : "ไม่ทราบแบรนด์"),
         brandColor: brand?.accent_color ?? "",
         familyId: familyOf(m.product).id,
-        image: pickImage(m.product, m.sku, splitSku(r.sku).size ?? sizeOf(r.nameRaw)),
+        image: pickImage(m.product, m.sku, splitSku(sku).size ?? sizeOf(r.nameRaw)),
         match: m.type,
         matchLabel: MATCH_LABEL[m.type],
         rawSkus: [],
@@ -93,6 +98,7 @@ export function buildData({ xlsx, catalogFile, skuMapFile, extraImageDir, extrac
     const it = items[itemKey];
     if (!it.rawSkus.includes(r.skuRaw.trim())) it.rawSkus.push(r.skuRaw.trim());
     if (r.nameRaw && !it.rawNames.includes(r.nameRaw)) it.rawNames.push(r.nameRaw);
+    if (r.note && !it.rawNames.includes(r.note)) it.rawNames.push(r.note); // so search finds "ไม่มีกล่อง"
 
     const base = { sheet: r.sheet, row: r.sheetRow, skuRaw: r.skuRaw.trim(), nameRaw: r.nameRaw, itemKey };
     if (m.type === "none") {
@@ -124,6 +130,7 @@ export function buildData({ xlsx, catalogFile, skuMapFile, extraImageDir, extrac
       skuRaw: r.skuRaw.trim(),
       suffix: r.suffix,
       nameRaw: r.nameRaw,
+      note: r.note,
       location: r.location,
       itemKey,
       qty: r.qty,

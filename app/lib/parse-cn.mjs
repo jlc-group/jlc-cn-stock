@@ -84,6 +84,17 @@ export function gradeNote(label) {
   return t;
 }
 
+/**
+ * The team adds remarks after "//" in the name: "ดีดีครีม 40g //// ไม่มีกล่อง" → { name: "ดีดีครีม 40g", note: "ไม่มีกล่อง" }.
+ * The note matters for resale (no box, faded box…), so it is kept apart instead of being matched as part of the name.
+ */
+export function splitNote(raw) {
+  const s = String(raw ?? "").replace(/\s+/g, " ").trim();
+  const i = s.search(/\/{2,}/);
+  if (i < 0) return { name: s, note: "" };
+  return { name: s.slice(0, i).trim(), note: s.slice(i).replace(/^\/+\s*/, "").trim() };
+}
+
 const text = (cell) => (cell && cell.v !== undefined && cell.v !== null ? String(cell.w ?? cell.v).trim() : "");
 
 /** Find columns from the header row. */
@@ -143,6 +154,7 @@ export function parseWorkbook(wb) {
       const sheetRow = r + 1;
       const d = parseDate(cell(r, cols.date));
       const { sku, suffix } = cleanSku(skuRaw);
+      const { name: nameRaw, note } = splitNote(text(cell(r, cols.name)));
       const row = {
         month: month.key,
         sheet,
@@ -152,15 +164,18 @@ export function parseWorkbook(wb) {
         skuRaw,
         sku,
         suffix,
-        nameRaw: text(cell(r, cols.name)).replace(/\s+/g, " "),
+        nameRaw,
+        note,
         location: text(cell(r, cols.location)),
         qty,
         total,
       };
       if (!skuRaw) issues.push({ type: "no-sku", sheet, row: sheetRow, nameRaw: row.nameRaw, message: "มีจำนวนแต่ไม่มี SKU" });
       if (total === 0) issues.push({ type: "no-qty", sheet, row: sheetRow, skuRaw, nameRaw: row.nameRaw, message: "มี SKU แต่ไม่มีจำนวนในช่องเกรด" });
-      if (!d.ok) issues.push({ type: "date", sheet, row: sheetRow, skuRaw, nameRaw: row.nameRaw, message: d.raw ? `อ่านวันที่ไม่ได้: "${d.raw}"` : "ไม่มีวันที่" });
-      else if (d.raw && !/^\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}$/.test(d.raw)) issues.push({ type: "date-text", sheet, row: sheetRow, skuRaw, nameRaw: row.nameRaw, message: `วันที่เป็นข้อความ "${d.raw}" ใช้วันแรก (${d.date})` });
+      // "-" is how the team marks rows without a receive date (e.g. a stock count at a location): not an error
+      const noDateOnPurpose = /^-+$/.test(d.raw);
+      if (!d.ok && !noDateOnPurpose) issues.push({ type: "date", sheet, row: sheetRow, skuRaw, nameRaw: row.nameRaw, message: d.raw ? `อ่านวันที่ไม่ได้: "${d.raw}"` : "ไม่มีวันที่" });
+      else if (d.ok && d.raw &&!/^\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}$/.test(d.raw)) issues.push({ type: "date-text", sheet, row: sheetRow, skuRaw, nameRaw: row.nameRaw, message: `วันที่เป็นข้อความ "${d.raw}" ใช้วันแรก (${d.date})` });
       rows.push(row);
     }
   }

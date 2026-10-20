@@ -5,6 +5,9 @@ import path from "node:path";
 import zlib from "node:zlib";
 
 const UTF8_FLAG = 0x0800;
+// "made by Unix" + Unix mode bits, so Linux/macOS unzip keeps .sh files executable (Windows ignores them)
+const MADE_BY_UNIX = (3 << 8) | 20;
+const unixAttrs = (name) => ((name.endsWith(".sh") ? 0o100755 : 0o100644) << 16) >>> 0;
 
 function dosTime(date) {
   const time = (date.getHours() << 11) | (date.getMinutes() << 5) | Math.floor(date.getSeconds() / 2);
@@ -54,7 +57,7 @@ export function zipDirectory(srcDir, zipPath) {
 
     const cen = Buffer.alloc(46);
     cen.writeUInt32LE(0x02014b50, 0);
-    cen.writeUInt16LE(20, 4); // version made by
+    cen.writeUInt16LE(MADE_BY_UNIX, 4);
     cen.writeUInt16LE(20, 6);
     cen.writeUInt16LE(UTF8_FLAG, 8);
     cen.writeUInt16LE(useDeflate ? 8 : 0, 10);
@@ -64,6 +67,7 @@ export function zipDirectory(srcDir, zipPath) {
     cen.writeUInt32LE(body.length, 20);
     cen.writeUInt32LE(data.length, 24);
     cen.writeUInt16LE(name.length, 28);
+    cen.writeUInt32LE(unixAttrs(f.rel), 38);
     cen.writeUInt32LE(offset, 42);
     central.push(cen, name);
 

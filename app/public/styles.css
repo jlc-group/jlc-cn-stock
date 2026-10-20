@@ -953,3 +953,19 @@ dialog::backdrop {
   cursor: default;
   opacity: 0.5;
 }
+
+/* remark from the Excel name ("// ไม่มีกล่อง") */
+.flag.note {
+  left: auto;
+  right: 8px;
+  max-width: calc(100% - 16px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: var(--info-soft, #e9f0f7);
+  color: var(--info, #2f5d8a);
+}
+.flag:not(.note) + .flag.note {
+  top: auto;
+  bottom: 8px;
+}

@@ -8,7 +8,8 @@
     "start": "node app/server.mjs",
     "open": "node app/server.mjs --open",
     "test": "node --test \"app/lib/*.test.mjs\"",
-    "bundle": "node scripts/make-bundle.mjs"
+    "bundle": "node scripts/make-bundle.mjs",
+    "sync-products": "node scripts/sync-products.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",
