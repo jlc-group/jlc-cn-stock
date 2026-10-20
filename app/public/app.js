@@ -85,12 +85,16 @@ function expiryText(e) {
   return e.min === e.max ? `อีก ${t}${fmt(e.min)} วัน` : `อีก ${t}${fmt(e.min)}–${fmt(e.max)} วัน`;
 }
 const expiryLevel = (e) => (!e ? "" : e.max < 0 ? "exp-gone" : e.min <= 90 ? "exp-90" : e.min <= 180 ? "exp-180" : "exp-ok");
+const TH_MONTH_SHORT = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+/** Grade note from the header, with MM/YY written as Thai month + BE year: "หมดอายุ 11/28 – 08/29" → "หมดอายุ พ.ย. 71 – ส.ค. 72" */
+const prettyNote = (note) =>
+  String(note ?? "").replace(/\b(\d{1,2})\/(\d{2})\b/g, (m, mm, yy) => (Number(mm) >= 1 && Number(mm) <= 12 ? `${TH_MONTH_SHORT[Number(mm) - 1]} ${Number(yy) + 43}` : m));
 const expiryRange = (e) => {
   if (!e?.from) return "";
   const [a, b] = [thMonthYear(e.from), thMonthYear(e.to)];
   return a === b ? a : `${a} – ${b}`;
 };
-const expiryBadge = (e, extra = "") => (e ? `<span class="exp ${expiryLevel(e)}">${esc(expiryText(e))}${extra}</span>` : "");
+const expiryBadge = (e, extra = "", prefix = "") => (e ? `<span class="exp ${expiryLevel(e)}">${prefix}${esc(expiryText(e))}${extra}</span>` : "");
 
 /** The stock that expires first among grades not yet expired (A+ … D); falls back to grade X when only X is left. */
 function soonest(a) {
@@ -219,7 +223,13 @@ function renderGradeBar(qty, total, rows = []) {
       const n = qty[g.key] || 0;
       const note = month?.gradeNotes?.[g.key] || GROUPS[g.group].label;
       const cls = state.grade === g.key ? "on" : state.grade !== "all" ? "dim" : "";
-      return `<li><button type="button" class="${cls}" data-grade="${g.key}" aria-pressed="${state.grade === g.key}" ${n ? "" : "disabled"} title="กดเพื่อดูสินค้าเกรด ${g.label}"><span class="sw" style="background:${gradeColor(g.key)}">${g.label}</span><b class="num">${fmt(n)}</b><span class="note">${esc(note)}</span>${n ? `<span class="note">${expiryBadge(expiryOf(rows, [g.key]))}</span>` : ""}</button></li>`;
+      const e = n ? expiryOf(rows, [g.key]) : null;
+      return `<li><button type="button" class="${cls}" data-grade="${g.key}" aria-pressed="${state.grade === g.key}" ${n ? "" : "disabled"} title="กดเพื่อดูสินค้าเกรด ${g.label}">
+        <span class="lg-top"><span class="sw" style="background:${gradeColor(g.key)}">${g.label}</span><span class="lg-pct num">${total ? pct(n, total) : 0}%</span></span>
+        <span class="lg-num num">${fmt(n)} <small>ชิ้น</small></span>
+        <span class="lg-note" title="${esc(prettyNote(note))}">${esc(prettyNote(note))}</span>
+        ${e ? `<span class="lg-days ${expiryLevel(e)}">⏳ ${esc(expiryText(e))}</span>` : `<span class="lg-days lg-none">—</span>`}
+      </button></li>`;
     })
     .join("");
 }
@@ -278,7 +288,7 @@ function cardsHtml(list) {
           ${miniBar(a.qty, s.total)}
           ${(() => {
             const sn = soonest(a);
-            return sn ? `<div class="exp-line">⏳ ใกล้หมดสุด: ${expiryBadge(sn.e)} <span class="muted">(เกรด ${esc(sn.grade.label)})</span></div>` : "";
+            return sn ? `<div class="exp-line" title="ของที่ใกล้หมดอายุที่สุดของสินค้านี้">${expiryBadge(sn.e, "", "⏳ ")}<span class="muted">เกรด ${esc(sn.grade.label)}</span></div>` : "";
           })()}
           <div class="subline"><span>รวม <b class="num">${fmt(s.total)}</b></span>${others.map((g) => `<span class="${g}">${GROUPS[g].label} ${fmt(s[g])}</span>`).join("")}</div>
         </div>
@@ -471,7 +481,7 @@ function openDetail(key) {
         <div class="big" style="margin-top:10px"><span class="n num ${a.sum.sell ? "" : "zero"}">${fmt(a.sum.sell)}</span><span class="t">ขายต่อได้ จากทั้งหมด ${fmt(a.sum.total)} ชิ้น ${state.month === "all" ? "(ทุกเดือน)" : `(${esc(month?.label)})`}</span></div>
         ${miniBar(a.qty, a.sum.total, 10)}
         <div class="d-grades">${DATA.grades
-          .map((g) => `<div style="border-left:4px solid ${gradeColor(g.key)}"><span>${g.label}</span><b class="num">${fmt(a.qty[g.key] || 0)}</b><span class="muted">${esc(month?.gradeNotes?.[g.key] || GROUPS[g.group].label)}</span>${a.qty[g.key] ? expiryBadge(expiryOf(a.rows, [g.key])) : ""}</div>`)
+          .map((g) => `<div style="border-left:4px solid ${gradeColor(g.key)}"><span>${g.label}</span><b class="num">${fmt(a.qty[g.key] || 0)}</b><span class="muted">${esc(prettyNote(month?.gradeNotes?.[g.key]) || GROUPS[g.group].label)}</span>${a.qty[g.key] ? expiryBadge(expiryOf(a.rows, [g.key])) : ""}</div>`)
           .join("")}</div>
         ${(() => {
           const lines = DATA.grades

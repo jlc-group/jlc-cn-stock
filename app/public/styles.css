@@ -1084,3 +1084,65 @@ dialog::backdrop {
 .nowrap {
   white-space: nowrap;
 }
+
+/* ---------- grade boxes: count · expiry month · days left ---------- */
+.legend button {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+  padding: 10px 10px 0;
+  overflow: hidden;
+  height: 100%;
+}
+.lg-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.legend .lg-top .sw {
+  grid-row: auto;
+}
+.lg-pct {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.lg-num {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 4px;
+}
+.lg-num small {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.lg-note {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.lg-days {
+  margin: auto -10px 0;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.lg-days.lg-none {
+  color: var(--muted);
+  font-weight: 400;
+}
+.lg-note + .lg-days {
+  margin-top: 8px;
+}
+.exp-line {
+  gap: 6px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+.exp-line .muted {
+  font-size: 12px;
+}
