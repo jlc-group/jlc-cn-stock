@@ -69,3 +69,10 @@ test("sku-map can redirect to a size the catalog does not list", () => {
   assert.equal(m.product.id, "moringa");
   assert.equal(m.alias, "C2-40G");
 });
+
+test("sku-map can give a code its confirmed display name", () => {
+  const map = new Map([["C28G", { sku: "C2-8G", name: "ชื่อที่ทีมยืนยัน", note: "เหตุผล" }]]);
+  const m = matchRow({ sku: "C2-8G", skuRaw: "C2-8G", nameRaw: "" }, index, map);
+  assert.equal(m.name, "ชื่อที่ทีมยืนยัน");
+  assert.equal(m.sku.sku, "C2-8G");
+});

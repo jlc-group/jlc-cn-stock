@@ -122,11 +122,11 @@ export function matchRow(row, index, skuMap = new Map()) {
   const manual = skuMap.get(full) ?? skuMap.get(base);
   if (manual) {
     const hit = index.bySku.get(keyOf(manual.sku));
-    if (hit) return { type: "map", product: hit.product, sku: hit.sku, note: manual.note ?? "", manual: true };
+    if (hit) return { type: "map", product: hit.product, sku: hit.sku, note: manual.note ?? "", name: manual.name ?? "", manual: true };
     // A size the catalog does not list (e.g. "JH1-MO4" → "JHK1-6G"): match as if that SKU had been typed,
     // so the row joins the same item. No skuMap here, so it cannot loop.
     const alias = String(manual.sku).toUpperCase().replace(/\s+/g, "");
-    return { ...matchRow({ ...row, sku: alias, skuRaw: alias }, index), alias, manual: true, note: manual.note ?? "" };
+    return { ...matchRow({ ...row, sku: alias, skuRaw: alias }, index), alias, manual: true, note: manual.note ?? "", name: manual.name ?? "" };
   }
   const exact = index.bySku.get(base);
   if (exact) return { type: "exact", product: exact.product, sku: exact.sku };

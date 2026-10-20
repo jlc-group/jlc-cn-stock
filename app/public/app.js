@@ -27,7 +27,7 @@ let DATA = null;
 const SNAPSHOT = window.__CN_DATA__ ?? null;
 /** Image paths from the server are relative to it; exported files hold data: URLs. */
 const imgSrc = (src) => (String(src).startsWith("data:") ? src : "/" + src);
-const state = { month: null, group: "all", grade: "all", family: "all", brand: "all", location: "all", q: "", sort: "sell", view: "cards" };
+const state = { month: null, group: "all", grade: "all", codeMismatch: false, family: "all", brand: "all", location: "all", q: "", sort: "sell", view: "cards" };
 
 // remember view choices per viewer (convenience only)
 try {
@@ -98,6 +98,12 @@ function render() {
   // A single grade (clicked in the grade bar) is narrower than a group (KPI card); only one is active at a time.
   const pick = state.grade !== "all" ? state.grade : state.group;
   let list = pick === "all" ? all : all.filter((a) => a.sum[pick] > 0);
+  // "รหัสไม่ตรง": only items whose Excel code differs from the code used
+  const mismatched = list.filter((a) => excelCodes(a).length);
+  $("#mismatchCount").textContent = fmt(mismatched.length);
+  $("#mismatch").classList.toggle("on", state.codeMismatch);
+  $("#mismatch").setAttribute("aria-pressed", String(state.codeMismatch));
+  if (state.codeMismatch) list = mismatched;
   const key = state.grade !== "all" ? state.grade : state.sort;
   list.sort((a, b) => (key === "name" ? a.item.name.localeCompare(b.item.name, "th") : b.sum[key] - a.sum[key] || b.sum.total - a.sum.total));
   renderFilterLine(list.length);
@@ -153,6 +159,7 @@ function renderFilterLine(count) {
   const chips = [];
   if (state.group !== "all") chips.push(`<button class="chip" data-clear="group">${GROUPS[state.group].label} ✕</button>`);
   if (state.grade !== "all") chips.push(`<button class="chip" data-clear="grade">เกรด ${esc(DATA.grades.find((g) => g.key === state.grade)?.label)} ✕</button>`);
+  if (state.codeMismatch) chips.push(`<button class="chip" data-clear="codeMismatch">รหัสไม่ตรง ✕</button>`);
   if (state.family !== "all") chips.push(`<button class="chip" data-clear="family">สารสกัด ${esc(familyLabel(state.family))} ✕</button>`);
   if (state.brand !== "all") chips.push(`<button class="chip" data-clear="brand">${esc(DATA.brands.find((b) => b.id === state.brand)?.name)} ✕</button>`);
   if (state.location !== "all") chips.push(`<button class="chip" data-clear="location">${esc(state.location)} ✕</button>`);
@@ -487,7 +494,7 @@ document.addEventListener("click", (e) => {
     state.view = t.dataset.view;
     document.querySelectorAll(".seg button").forEach((b) => b.classList.toggle("on", b === t));
   } else if (t.dataset.clear) {
-    state[t.dataset.clear] = t.dataset.clear === "q" ? "" : "all";
+    state[t.dataset.clear] = t.dataset.clear === "q" ? "" : t.dataset.clear === "codeMismatch" ? false : "all";
     if (t.dataset.clear === "q") $("#q").value = "";
     if (t.dataset.clear === "brand") $("#brand").value = "all";
     if (t.dataset.clear === "family") $("#family").value = "all";
@@ -508,6 +515,10 @@ for (const id of ["family", "brand", "location", "sort"]) {
   });
 }
 $("#refresh").addEventListener("click", load);
+$("#mismatch").addEventListener("click", () => {
+  state.codeMismatch = !state.codeMismatch;
+  render();
+});
 if (SNAPSHOT) {
   // exported file: no server to refresh from or export again
   $("#refresh").hidden = true;

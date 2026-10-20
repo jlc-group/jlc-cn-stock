@@ -79,7 +79,8 @@ export function buildData({ xlsx, catalogFile, skuMapFile, extraImageDir, extrac
         // The brand is shown next to the name, so drop the "จุฬาเฮิร์บ " prefix most catalog names carry.
         // The code decides the name: a size missing from the catalog (JHK1-6G) still shows its size, so it never looks
         // like the same card as JHK1-8G.
-        name: (m.sku?.name_full_th || (m.product ? withSize(m.product.name_th, splitSku(sku).size) : "") || r.nameRaw || sku).replace(/^จุฬาเฮิร์บ\s*/, ""),
+        // sku-map "name" wins: the team's confirmed name when the catalog name is wrong for that code
+        name: (m.name || m.sku?.name_full_th || (m.product ? withSize(m.product.name_th, splitSku(sku).size) : "") || r.nameRaw || sku).replace(/^จุฬาเฮิร์บ\s*/, ""),
         productName: m.product?.name_th ?? "",
         nameEn: m.product?.name_en ?? "",
         nickname: m.product?.nickname_th ?? "",

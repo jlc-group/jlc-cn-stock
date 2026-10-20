@@ -990,3 +990,28 @@ dialog::backdrop {
   color: var(--forest);
   font-weight: 700;
 }
+
+/* "รหัสไม่ตรง" filter toggle */
+.toggle {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: var(--surface);
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.toggle b {
+  margin-left: 4px;
+  background: var(--rush-soft);
+  color: var(--rush);
+  border-radius: 999px;
+  padding: 0 8px;
+  font-size: 12.5px;
+}
+.toggle.on {
+  border-color: var(--rush);
+  background: var(--rush-soft);
+  color: var(--rush);
+}
