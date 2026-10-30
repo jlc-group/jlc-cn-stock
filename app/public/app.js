@@ -27,7 +27,7 @@ let DATA = null;
 const SNAPSHOT = window.__CN_DATA__ ?? null;
 /** Image paths from the server are relative to it; exported files hold data: URLs. */
 const imgSrc = (src) => (String(src).startsWith("data:") ? src : "/" + src);
-const state = { month: null, group: "all", grade: "all", codeMismatch: false, family: "all", brand: "all", location: "all", q: "", sort: "sell", view: "cards" };
+const state = { month: null, group: "all", grade: "all", codeMismatch: false, hideExpired: false, family: "all", brand: "all", location: "all", q: "", sort: "sell", view: "cards" };
 
 // remember view choices per viewer (convenience only)
 try {
@@ -35,7 +35,7 @@ try {
 } catch {}
 const save = () => {
   try {
-    localStorage.setItem("cn-dash", JSON.stringify({ month: state.month, sort: state.sort, view: state.view }));
+    localStorage.setItem("cn-dash", JSON.stringify({ month: state.month, sort: state.sort, view: state.view, hideExpired: state.hideExpired }));
   } catch {}
 };
 
@@ -126,8 +126,25 @@ function sumGroups(qty) {
 }
 
 /** Rows in the selected month / location. */
+/** Grades shown on screen: all of them, or without grade X while "ซ่อนหมดอายุ" is on. */
+const shownGrades = () => DATA.grades.filter((g) => !(state.hideExpired && g.group === "expired"));
+const expiredKeys = () => DATA.grades.filter((g) => g.group === "expired").map((g) => g.key);
+/** Copy of a row without its expired pieces (nothing is deleted from the data). */
+function withoutExpired(r) {
+  const qty = { ...r.qty };
+  const expiry = { ...r.expiry };
+  let total = r.total;
+  for (const k of expiredKeys()) {
+    total -= qty[k] || 0;
+    delete qty[k];
+    delete expiry[k];
+  }
+  return { ...r, qty, expiry, total };
+}
+
 function scopedRows() {
-  return DATA.rows.filter((r) => (state.month === "all" || r.month === state.month) && (state.location === "all" || r.location === state.location));
+  const rows = DATA.rows.filter((r) => (state.month === "all" || r.month === state.month) && (state.location === "all" || r.location === state.location));
+  return state.hideExpired ? rows.map(withoutExpired).filter((r) => r.total > 0) : rows;
 }
 
 function matchesText(it) {
@@ -156,7 +173,23 @@ function aggregate(rows) {
 }
 
 // ---------------------------------------------------------------- render
+function syncExpiredToggle() {
+  if (state.hideExpired) {
+    if (state.group === "expired") state.group = "all";
+    if (expiredKeys().includes(state.grade)) state.grade = "all";
+    if (state.sort === "expired") state.sort = "sell";
+  }
+  const opt = document.querySelector('#sort option[value="expired"]');
+  if (opt) opt.hidden = state.hideExpired;
+  $("#sort").value = state.sort;
+  const btn = $("#expToggle");
+  btn.textContent = state.hideExpired ? "🙈 แสดงหมดอายุ" : "👁 ซ่อนหมดอายุ";
+  btn.classList.toggle("on", state.hideExpired);
+  btn.setAttribute("aria-pressed", String(state.hideExpired));
+}
+
 function render() {
+  syncExpiredToggle();
   const all = aggregate(scopedRows());
   const totals = { qty: {} };
   for (const a of all) for (const [k, n] of Object.entries(a.qty)) totals.qty[k] = (totals.qty[k] || 0) + n;
@@ -199,14 +232,15 @@ function renderKpis(s) {
       <div class="meta">${meta}</div>
     </button>`;
   $("#kpis").innerHTML =
-    card("all", "รับคืนทั้งหมด", s.total, `${fmt(new Set(scopedRows().map((r) => r.itemKey)).size)} รายการสินค้า`) +
+    card("all", state.hideExpired ? "รับคืน (ไม่รวมหมดอายุ)" : "รับคืนทั้งหมด", s.total, `${fmt(new Set(scopedRows().map((r) => r.itemKey)).size)} รายการสินค้า`) +
     card("sell", GROUPS.sell.label, s.sell, `${pct(s.sell, s.total)}% · ${GROUPS.sell.desc}`, GROUPS.sell.color) +
     card("rush", GROUPS.rush.label, s.rush, `${pct(s.rush, s.total)}% · ${GROUPS.rush.desc}`, GROUPS.rush.color) +
-    card("expired", GROUPS.expired.label, s.expired, `${pct(s.expired, s.total)}% · ${GROUPS.expired.desc}`, GROUPS.expired.color);
+    (state.hideExpired ? "" : card("expired", GROUPS.expired.label, s.expired, `${pct(s.expired, s.total)}% · ${GROUPS.expired.desc}`, GROUPS.expired.color));
+  $("#kpis").classList.toggle("three", state.hideExpired);
 }
 
 function renderGradeBar(qty, total, rows = []) {
-  $("#gradebar").innerHTML = DATA.grades
+  $("#gradebar").innerHTML = shownGrades()
     .map((g) => {
       const n = qty[g.key] || 0;
       const w = total ? (n / total) * 100 : 0;
@@ -218,7 +252,8 @@ function renderGradeBar(qty, total, rows = []) {
     .join("");
   const month = DATA.months.find((m) => m.key === state.month);
   $("#gradeHint").textContent = month ? `ช่วงอายุตามหัวคอลัมน์ในแท็บ ${month.sheet}` : "เลือกเดือนเพื่อดูช่วงวันหมดอายุของแต่ละเกรด";
-  $("#legend").innerHTML = DATA.grades
+  $("#legend").classList.toggle("five", state.hideExpired);
+  $("#legend").innerHTML = shownGrades()
     .map((g) => {
       const n = qty[g.key] || 0;
       const note = month?.gradeNotes?.[g.key] || GROUPS[g.group].label;
@@ -253,7 +288,7 @@ function thumb(it, size = "sm") {
 }
 
 function miniBar(qty, total, h = 8) {
-  return `<div class="mini" style="height:${h}px">${DATA.grades
+  return `<div class="mini" style="height:${h}px">${shownGrades()
     .map((g) => (qty[g.key] ? `<span style="width:${(qty[g.key] / total) * 100}%;background:${gradeColor(g.key)}" title="${g.label}: ${fmt(qty[g.key])}"></span>` : ""))
     .join("")}</div>`;
 }
@@ -298,7 +333,7 @@ function cardsHtml(list) {
 }
 
 function tableHtml(list) {
-  const g = DATA.grades;
+  const g = shownGrades();
   const foot = { qty: {} };
   for (const a of list) for (const [k, n] of Object.entries(a.qty)) foot.qty[k] = (foot.qty[k] || 0) + n;
   foot.sum = sumGroups(foot.qty);
@@ -346,7 +381,7 @@ function familyHtml(list) {
         <header class="fam-head">
           <button type="button" class="fam-name" data-family="${esc(f.id)}" title="กรองเฉพาะสารสกัดนี้">${esc(familyLabel(f.id))}</button>
           <span class="muted">${fmt(f.items.length)} รายการ</span>
-          <span class="fam-nums"><b class="num">${fmt(f.sum.total)}</b> ชิ้น · <span class="sell">ขายต่อได้ ${fmt(f.sum.sell)}</span>${f.sum.rush ? ` · <span class="rush">รีบระบาย ${fmt(f.sum.rush)}</span>` : ""}${f.sum.expired ? ` · <span class="expired">หมดอายุ ${fmt(f.sum.expired)}</span>` : ""}</span>
+          <span class="fam-nums"><b class="num">${fmt(f.sum.total)}</b> ชิ้น · <span class="sell">ขายต่อได้ ${fmt(f.sum.sell)}</span>${f.sum.rush ? ` · <span class="rush">รีบระบาย ${fmt(f.sum.rush)}</span>` : ""}${f.sum.expired && !state.hideExpired ? ` · <span class="expired">หมดอายุ ${fmt(f.sum.expired)}</span>` : ""}</span>
         </header>
         ${miniBar(f.qty, f.sum.total, 10)}
         <div class="fam-rows">${f.items
@@ -360,7 +395,7 @@ function familyHtml(list) {
               <span class="fam-bar">${miniBar(a.qty, a.sum.total)}</span>
               <span class="fam-q"><b class="num ${a.sum.sell ? "sell" : "zero"}">${fmt(a.sum.sell)}</b><small>ขายได้</small></span>
               <span class="fam-q q-rush"><b class="num ${a.sum.rush ? "rush" : "zero"}">${fmt(a.sum.rush)}</b><small>รีบระบาย</small></span>
-              <span class="fam-q q-exp"><b class="num ${a.sum.expired ? "expired" : "zero"}">${fmt(a.sum.expired)}</b><small>หมดอายุ</small></span>
+              ${state.hideExpired ? "" : `<span class="fam-q q-exp"><b class="num ${a.sum.expired ? "expired" : "zero"}">${fmt(a.sum.expired)}</b><small>หมดอายุ</small></span>`}
               <span class="fam-q"><b class="num">${fmt(a.sum.total)}</b><small>รวม</small></span>
             </button>`,
           )
@@ -480,11 +515,11 @@ function openDetail(key) {
         ${[...new Set(a.rows.map((r) => r.mapNote).filter(Boolean))].map((n) => `<div class="muted" style="margin-top:4px">📌 ${esc(n)}</div>`).join("")}
         <div class="big" style="margin-top:10px"><span class="n num ${a.sum.sell ? "" : "zero"}">${fmt(a.sum.sell)}</span><span class="t">ขายต่อได้ จากทั้งหมด ${fmt(a.sum.total)} ชิ้น ${state.month === "all" ? "(ทุกเดือน)" : `(${esc(month?.label)})`}</span></div>
         ${miniBar(a.qty, a.sum.total, 10)}
-        <div class="d-grades">${DATA.grades
+        <div class="d-grades ${state.hideExpired ? "five" : ""}">${shownGrades()
           .map((g) => `<div style="border-left:4px solid ${gradeColor(g.key)}"><span>${g.label}</span><b class="num">${fmt(a.qty[g.key] || 0)}</b><span class="muted">${esc(prettyNote(month?.gradeNotes?.[g.key]) || GROUPS[g.group].label)}</span>${a.qty[g.key] ? expiryBadge(expiryOf(a.rows, [g.key])) : ""}</div>`)
           .join("")}</div>
         ${(() => {
-          const lines = DATA.grades
+          const lines = shownGrades()
             .filter((g) => a.qty[g.key])
             .map((g) => ({ g, e: expiryOf(a.rows, [g.key]) }))
             .filter((x) => x.e);
@@ -507,11 +542,11 @@ function openDetail(key) {
       }
       <h3 style="font-size:15px">รายการที่มาจากไฟล์ Excel (${fmt(rows.length)} แถว)</h3>
       <div class="tablewrap"><table>
-        <thead><tr><th>วันที่</th><th>SKU ในไฟล์</th><th>ชื่อในไฟล์</th>${DATA.grades.map((g) => `<th class="r"><span class="gh"><i style="background:${gradeColor(g.key)}"></i>${g.label}</span></th>`).join("")}${showLoc ? "<th>Location</th>" : ""}${showNote ? "<th>หมายเหตุ</th>" : ""}<th>หมดอายุใน</th><th>แท็บ / แถว</th></tr></thead>
+        <thead><tr><th>วันที่</th><th>SKU ในไฟล์</th><th>ชื่อในไฟล์</th>${shownGrades().map((g) => `<th class="r"><span class="gh"><i style="background:${gradeColor(g.key)}"></i>${g.label}</span></th>`).join("")}${showLoc ? "<th>Location</th>" : ""}${showNote ? "<th>หมายเหตุ</th>" : ""}<th>หมดอายุใน</th><th>แท็บ / แถว</th></tr></thead>
         <tbody>${rows
           .map(
             (r) => `<tr style="cursor:default"><td>${r.date ? thDate(r.date) : `<span class="muted">${esc(r.dateRaw || "—")}</span>`}</td><td class="mono">${esc(r.skuRaw)}${normSku(r.skuRaw) !== normSku(r.skuUsed) ? ` <span class="muted">→ ${esc(r.skuUsed)}</span>` : ""}</td><td style="white-space:normal;min-width:200px">${esc(r.nameRaw)}</td>
-              ${DATA.grades.map((g) => `<td class="r num ${r.qty[g.key] ? "" : "zero"}">${r.qty[g.key] ? fmt(r.qty[g.key]) : "–"}</td>`).join("")}${showLoc ? `<td>${esc(r.location)}</td>` : ""}${showNote ? `<td style="white-space:normal">${r.note ? `<b>📝 ${esc(r.note)}</b>` : ""}</td>` : ""}<td style="white-space:normal">${DATA.grades
+              ${shownGrades().map((g) => `<td class="r num ${r.qty[g.key] ? "" : "zero"}">${r.qty[g.key] ? fmt(r.qty[g.key]) : "–"}</td>`).join("")}${showLoc ? `<td>${esc(r.location)}</td>` : ""}${showNote ? `<td style="white-space:normal">${r.note ? `<b>📝 ${esc(r.note)}</b>` : ""}</td>` : ""}<td style="white-space:normal">${DATA.grades
                 .filter((g) => r.qty[g.key])
                 .map((g) => `<span class="nowrap">${g.label} ${expiryBadge(expiryOf([r], [g.key]))}</span>`)
                 .join(" ")}</td><td class="muted">${esc(r.sheet)} / ${r.row}</td></tr>`,
@@ -622,10 +657,20 @@ for (const id of ["family", "brand", "location", "sort"]) {
   });
 }
 $("#refresh").addEventListener("click", load);
+$("#expToggle").addEventListener("click", () => {
+  state.hideExpired = !state.hideExpired;
+  save();
+  render();
+});
 $("#mismatch").addEventListener("click", () => {
   state.codeMismatch = !state.codeMismatch;
   render();
 });
+if (SNAPSHOT?.expiredRemoved) {
+  // exported without expired stock: nothing to show again, so hide the toggle too
+  state.hideExpired = true;
+  $("#expToggle").hidden = true;
+}
 if (SNAPSHOT) {
   // exported file: no server to refresh from or export again
   $("#refresh").hidden = true;
@@ -637,7 +682,8 @@ $("#export").addEventListener("click", async () => {
   btn.disabled = true;
   try {
     const { exportHtml } = await import("./export.js");
-    const { bytes, file } = await exportHtml(DATA, (msg) => (btn.textContent = msg));
+    // while "ซ่อนหมดอายุ" is on, the exported file leaves grade X out completely
+    const { bytes, file } = await exportHtml(DATA, (msg) => (btn.textContent = msg), { removeExpired: state.hideExpired });
     btn.textContent = `✓ บันทึก ${file} (${(bytes / 1024 / 1024).toFixed(1)} MB)`;
     setTimeout(() => (btn.textContent = label), 6000);
   } catch (e) {

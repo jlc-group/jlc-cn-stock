@@ -1146,3 +1146,23 @@ dialog::backdrop {
 .exp-line .muted {
   font-size: 12px;
 }
+
+/* "ซ่อนหมดอายุ": one column less for the KPI cards and grade boxes */
+#expToggle.on {
+  background: var(--forest);
+  color: #fff;
+  border-color: var(--forest);
+}
+@media (min-width: 901px) {
+  .kpis.three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .legend.five {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+@media (min-width: 561px) {
+  .d-grades.five {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}

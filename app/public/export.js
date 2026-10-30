@@ -54,14 +54,37 @@ async function fontCss(family, weight) {
 
 const pad = (n) => String(n).padStart(2, "0");
 
+/** Remove grade X from the exported data itself (not just hidden), so the file cannot show it. */
+function dropExpired(snap) {
+  const keys = snap.grades.filter((g) => g.group === "expired").map((g) => g.key);
+  snap.rows = snap.rows
+    .map((r) => {
+      const qty = { ...r.qty };
+      const expiry = { ...r.expiry };
+      let total = r.total;
+      for (const k of keys) {
+        total -= qty[k] || 0;
+        delete qty[k];
+        delete expiry[k];
+      }
+      return { ...r, qty, expiry, total };
+    })
+    .filter((r) => r.total > 0);
+  const used = new Set(snap.rows.map((r) => r.itemKey));
+  for (const k of Object.keys(snap.items)) if (!used.has(k)) delete snap.items[k];
+  for (const m of snap.months) for (const k of keys) delete m.gradeNotes?.[k];
+  snap.expiredRemoved = true;
+}
+
 /**
  * Build the standalone HTML and start the download.
  * @param {object} data   the /api/data payload currently shown
  * @param {(msg: string) => void} progress
  */
-export async function exportHtml(data, progress = () => {}) {
+export async function exportHtml(data, progress = () => {}, { removeExpired = false } = {}) {
   const snap = structuredClone(data);
   snap.exportedAt = new Date().toISOString();
+  if (removeExpired) dropExpired(snap);
 
   // 1) images → small embedded copies (same picture shared by several SKUs is encoded once)
   const items = Object.values(snap.items).filter((i) => i.image);
