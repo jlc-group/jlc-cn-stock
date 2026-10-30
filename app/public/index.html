@@ -16,15 +16,15 @@
   <body>
     <header class="topbar">
       <div class="wrap topbar-in">
+        <button class="menu-btn" id="settingsBtn" type="button" aria-label="ตั้งค่า" title="ตั้งค่า">☰</button>
         <div class="brand">
           <img src="jlc-logo.png" alt="JLC Group" class="logo" />
           <div>
-            <h1>CN สินค้ารับคืน</h1>
+            <h1>CN สินค้ารับคืน <span class="mode-note" id="modeNote" hidden></span></h1>
             <p class="sub" id="source">กำลังโหลด…</p>
           </div>
         </div>
         <nav class="months" id="months" aria-label="เลือกเดือน"></nav>
-        <button class="btn ghost" id="expToggle" type="button" aria-pressed="false" title="ซ่อน/แสดงสินค้าหมดอายุ (เกรด X) ทั้งหน้า">👁 ซ่อนหมดอายุ</button>
         <button class="btn ghost" id="refresh" type="button" title="อ่านไฟล์ Excel ใหม่">↻ รีเฟรช</button>
         <button class="btn" id="export" type="button" title="สร้างไฟล์ .html ไฟล์เดียว ส่งให้คนอื่นเปิดดูได้เลย">⬇ ส่งออก HTML</button>
       </div>
@@ -58,7 +58,7 @@
             <option value="expiry">ใกล้หมดอายุก่อน</option>
             <option value="name">ชื่อสินค้า ก–ฮ</option>
           </select>
-          <button type="button" class="toggle" id="mismatch" aria-pressed="false" title="สินค้าที่รหัสใน Excel ไม่ตรงกับรหัสที่ใช้">รหัสไม่ตรง <b id="mismatchCount">0</b></button>
+          <button type="button" class="toggle check-only" id="mismatch" aria-pressed="false" title="สินค้าที่รหัสใน Excel ไม่ตรงกับรหัสที่ใช้">รหัสไม่ตรง <b id="mismatchCount">0</b></button>
           <div class="seg" role="group" aria-label="มุมมอง">
             <button type="button" data-view="cards" class="on">การ์ด</button>
             <button type="button" data-view="table">ตาราง</button>
@@ -69,14 +69,14 @@
         <div id="list"></div>
       </section>
 
-      <section class="panel">
+      <section class="panel check-only" id="codesPanel">
         <details id="codesBox">
           <summary><h2>เทียบรหัส Excel → รหัสที่ใช้</h2> <span class="pill" id="codeCount">0</span> <span class="muted">รหัสที่พิมพ์ในไฟล์ไม่ตรงกับรหัสสินค้าที่แดชบอร์ดนับให้</span></summary>
           <div id="codes"></div>
         </details>
       </section>
 
-      <section class="panel">
+      <section class="panel check-only" id="issuesPanel">
         <details id="issuesBox">
           <summary><h2>ตรวจข้อมูล</h2> <span class="pill" id="issueCount">0</span> <span class="muted">แถวในไฟล์ Excel ที่ควรแก้หรือยืนยัน</span></summary>
           <div id="issues"></div>
@@ -87,6 +87,31 @@
     </main>
 
     <dialog id="detail" aria-labelledby="dTitle"></dialog>
+
+    <dialog id="settings" class="drawer" aria-labelledby="settingsTitle">
+      <div class="drawer-head">
+        <h2 id="settingsTitle">⚙️ ตั้งค่า</h2>
+        <button type="button" class="d-close" data-close-settings aria-label="ปิด">✕</button>
+      </div>
+      <div class="drawer-body">
+        <p class="drawer-section">การแสดงผล</p>
+        <label class="switch-row" id="optExpiredRow">
+          <span class="switch-text">
+            <b>แสดงสินค้าหมดอายุ (เกรด X)</b>
+            <small>ปิดแล้ว ยอดรวมและ % คิดจากเกรด A+ ถึง D · กดส่งออก HTML ตอนปิด ไฟล์จะไม่มีข้อมูลหมดอายุเลย</small>
+          </span>
+          <input type="checkbox" id="optExpired" class="switch" />
+        </label>
+        <label class="switch-row" id="optChecksRow">
+          <span class="switch-text">
+            <b>แสดงข้อมูลสำหรับตรวจ</b>
+            <small>ส่วน "เทียบรหัส" และ "ตรวจข้อมูล" ด้านล่าง ปุ่ม "รหัสไม่ตรง" และป้าย "ใน Excel:" บนการ์ด · ปิดไว้ตอนนำเสนอ</small>
+          </span>
+          <input type="checkbox" id="optChecks" class="switch" />
+        </label>
+        <p class="drawer-note">เครื่องนี้จะจำการตั้งค่าไว้ เปิดครั้งหน้ายังเป็นแบบเดิม ไม่มีข้อมูลถูกลบ</p>
+      </div>
+    </dialog>
 
     <script src="app.js" type="module"></script>
   </body>

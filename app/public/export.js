@@ -81,10 +81,15 @@ function dropExpired(snap) {
  * @param {object} data   the /api/data payload currently shown
  * @param {(msg: string) => void} progress
  */
-export async function exportHtml(data, progress = () => {}, { removeExpired = false } = {}) {
+export async function exportHtml(data, progress = () => {}, { removeExpired = false, hideChecks = false } = {}) {
   const snap = structuredClone(data);
   snap.exportedAt = new Date().toISOString();
   if (removeExpired) dropExpired(snap);
+  if (hideChecks) {
+    // presentation copy: no data-check panels, and no list of issues inside the file
+    snap.hideChecks = true;
+    snap.issues = [];
+  }
 
   // 1) images → small embedded copies (same picture shared by several SKUs is encoded once)
   const items = Object.values(snap.items).filter((i) => i.image);

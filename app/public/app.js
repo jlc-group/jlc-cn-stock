@@ -27,7 +27,7 @@ let DATA = null;
 const SNAPSHOT = window.__CN_DATA__ ?? null;
 /** Image paths from the server are relative to it; exported files hold data: URLs. */
 const imgSrc = (src) => (String(src).startsWith("data:") ? src : "/" + src);
-const state = { month: null, group: "all", grade: "all", codeMismatch: false, hideExpired: false, family: "all", brand: "all", location: "all", q: "", sort: "sell", view: "cards" };
+const state = { month: null, group: "all", grade: "all", codeMismatch: false, hideExpired: false, showChecks: true, family: "all", brand: "all", location: "all", q: "", sort: "sell", view: "cards" };
 
 // remember view choices per viewer (convenience only)
 try {
@@ -35,7 +35,7 @@ try {
 } catch {}
 const save = () => {
   try {
-    localStorage.setItem("cn-dash", JSON.stringify({ month: state.month, sort: state.sort, view: state.view, hideExpired: state.hideExpired }));
+    localStorage.setItem("cn-dash", JSON.stringify({ month: state.month, sort: state.sort, view: state.view, hideExpired: state.hideExpired, showChecks: state.showChecks }));
   } catch {}
 };
 
@@ -182,10 +182,14 @@ function syncExpiredToggle() {
   const opt = document.querySelector('#sort option[value="expired"]');
   if (opt) opt.hidden = state.hideExpired;
   $("#sort").value = state.sort;
-  const btn = $("#expToggle");
-  btn.textContent = state.hideExpired ? "🙈 แสดงหมดอายุ" : "👁 ซ่อนหมดอายุ";
-  btn.classList.toggle("on", state.hideExpired);
-  btn.setAttribute("aria-pressed", String(state.hideExpired));
+  // settings drawer switches + a small reminder next to the title while something is hidden
+  $("#optExpired").checked = !state.hideExpired;
+  $("#optChecks").checked = state.showChecks;
+  document.body.classList.toggle("no-checks", !state.showChecks);
+  if (!state.showChecks) state.codeMismatch = false;
+  const hidden = [state.hideExpired && "ซ่อนหมดอายุ", !state.showChecks && "โหมดนำเสนอ"].filter(Boolean);
+  $("#modeNote").hidden = !hidden.length || !!SNAPSHOT;
+  $("#modeNote").textContent = hidden.join(" · ");
 }
 
 function render() {
@@ -511,8 +515,8 @@ function openDetail(key) {
         <div class="muted">${esc(it.brandName)} · สารสกัด ${esc(familyLabel(it.familyId))} · ${esc(it.matchLabel)}</div>
         <h2 class="d-title" id="dTitle">${esc(it.name)}</h2>
         ${it.nameEn ? `<div class="muted">${esc(it.nameEn)}</div>` : ""}
-        <div style="margin-top:6px"><span class="muted">รหัสที่ใช้</span> <span class="tag mono"><b>${esc(it.sku)}</b></span>${excelCodes(a).length ? ` <span class="muted">· ใน Excel</span> ${excelCodes(a).map((s) => `<span class="tag mono excel-code">${esc(s)}</span>`).join("")}` : ""}</div>
-        ${[...new Set(a.rows.map((r) => r.mapNote).filter(Boolean))].map((n) => `<div class="muted" style="margin-top:4px">📌 ${esc(n)}</div>`).join("")}
+        <div style="margin-top:6px"><span class="muted">รหัสที่ใช้</span> <span class="tag mono"><b>${esc(it.sku)}</b></span>${excelCodes(a).length ? ` <span class="muted check-only">· ใน Excel</span> ${excelCodes(a).map((s) => `<span class="tag mono excel-code">${esc(s)}</span>`).join("")}` : ""}</div>
+        ${[...new Set(a.rows.map((r) => r.mapNote).filter(Boolean))].map((n) => `<div class="muted check-only" style="margin-top:4px">📌 ${esc(n)}</div>`).join("")}
         <div class="big" style="margin-top:10px"><span class="n num ${a.sum.sell ? "" : "zero"}">${fmt(a.sum.sell)}</span><span class="t">ขายต่อได้ จากทั้งหมด ${fmt(a.sum.total)} ชิ้น ${state.month === "all" ? "(ทุกเดือน)" : `(${esc(month?.label)})`}</span></div>
         ${miniBar(a.qty, a.sum.total, 10)}
         <div class="d-grades ${state.hideExpired ? "five" : ""}">${shownGrades()
@@ -657,8 +661,18 @@ for (const id of ["family", "brand", "location", "sort"]) {
   });
 }
 $("#refresh").addEventListener("click", load);
-$("#expToggle").addEventListener("click", () => {
-  state.hideExpired = !state.hideExpired;
+// ---- settings drawer (left side)
+$("#settingsBtn").addEventListener("click", () => $("#settings").showModal());
+$("#settings").addEventListener("click", (e) => {
+  if (e.target === $("#settings") || e.target.closest("[data-close-settings]")) $("#settings").close();
+});
+$("#optExpired").addEventListener("change", (e) => {
+  state.hideExpired = !e.target.checked;
+  save();
+  render();
+});
+$("#optChecks").addEventListener("change", (e) => {
+  state.showChecks = e.target.checked;
   save();
   render();
 });
@@ -667,10 +681,15 @@ $("#mismatch").addEventListener("click", () => {
   render();
 });
 if (SNAPSHOT?.expiredRemoved) {
-  // exported without expired stock: nothing to show again, so hide the toggle too
+  // exported without expired stock: nothing to show again, so hide that switch too
   state.hideExpired = true;
-  $("#expToggle").hidden = true;
+  $("#optExpiredRow").hidden = true;
 }
+if (SNAPSHOT?.hideChecks) {
+  state.showChecks = false;
+  $("#optChecksRow").hidden = true;
+}
+if (SNAPSHOT?.expiredRemoved && SNAPSHOT?.hideChecks) $("#settingsBtn").hidden = true; // nothing left to set
 if (SNAPSHOT) {
   // exported file: no server to refresh from or export again
   $("#refresh").hidden = true;
@@ -683,7 +702,7 @@ $("#export").addEventListener("click", async () => {
   try {
     const { exportHtml } = await import("./export.js");
     // while "ซ่อนหมดอายุ" is on, the exported file leaves grade X out completely
-    const { bytes, file } = await exportHtml(DATA, (msg) => (btn.textContent = msg), { removeExpired: state.hideExpired });
+    const { bytes, file } = await exportHtml(DATA, (msg) => (btn.textContent = msg), { removeExpired: state.hideExpired, hideChecks: !state.showChecks });
     btn.textContent = `✓ บันทึก ${file} (${(bytes / 1024 / 1024).toFixed(1)} MB)`;
     setTimeout(() => (btn.textContent = label), 6000);
   } catch (e) {
